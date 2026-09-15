@@ -13,7 +13,7 @@
   </script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://fonts.gstatic.com" />
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
   <style>
@@ -436,7 +436,6 @@
     </div>
 
     <div class="header-actions">
-      <!-- 4-Theme Carousel Button -->
       <button class="icon-btn" id="theme-toggle" title="Cycle Palette">
         <span id="theme-name">✦ Emerald & Gold</span>
       </button>
@@ -572,7 +571,6 @@
       `
     };
 
-    // 4 DISTINCT COLORWAYS
     const THEMES = [
       { id: 'emerald', label: '✦ Emerald & Gold' },
       { id: 'sapphire', label: '✦ Sapphire & Copper' },
@@ -580,6 +578,12 @@
       { id: 'plum', label: '✦ Plum & Rose Gold' }
     ];
     let currentThemeIndex = 0;
+
+    const STAINED_GLASS_SOURCES = [
+      './6f7eeb5b-a027-4abb-9325-7d676ca60f8d.png',
+      './stained-glass.png',
+      'https://i.ibb.co/3sBshfS/stained-glass-nails.png'
+    ];
 
     const root = document.documentElement;
     const themeBtn = document.getElementById('theme-toggle');
@@ -627,7 +631,6 @@
 
     nailPath.setAttribute('d', NAIL_PATHS.almond);
 
-    // Tab switching for comfortable spacing
     tabArt.addEventListener('click', () => {
       tabArt.classList.add('active');
       tabGuide.classList.remove('active');
@@ -642,7 +645,6 @@
       panelArt.style.display = 'none';
     });
 
-    // 4-Colorway Carousel Handler
     themeBtn.addEventListener('click', () => {
       currentThemeIndex = (currentThemeIndex + 1) % THEMES.length;
       const theme = THEMES[currentThemeIndex];
@@ -675,7 +677,7 @@
       guideWrapper.style.width = `${e.target.value}px`;
     });
 
-    // Stained glass image loader
+    // Preset selection with 3-tier fallback loader
     presetSelect.addEventListener('change', (e) => {
       const val = e.target.value;
       if (val === 'none') {
@@ -683,7 +685,16 @@
         traceImg.style.display = 'none';
       } else if (val === 'stained_glass') {
         presetSvg.style.display = 'none';
-        traceImg.src = '6f7eeb5b-a027-4abb-9325-7d676ca60f8d.png';
+        let attempt = 0;
+        
+        traceImg.onerror = () => {
+          attempt++;
+          if (attempt < STAINED_GLASS_SOURCES.length) {
+            traceImg.src = STAINED_GLASS_SOURCES[attempt];
+          }
+        };
+
+        traceImg.src = STAINED_GLASS_SOURCES[0];
         traceImg.style.display = 'block';
         resetTransforms();
       } else {
