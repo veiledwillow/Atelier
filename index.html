@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="emerald">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Atelier Trace Studio</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* THEME SYSTEM */
+    :root[data-theme="emerald"] {
+      --bg-deep: #050d09;
+      --bg-surface: #0a1711;
+      --bg-surface-elevated: #0f2118;
+      --border-soft: rgba(212, 175, 55, 0.22);
+      --border-bright: rgba(212, 175, 55, 0.55);
+      
+      --accent-prime: #d4af37;
+      --accent-glow: rgba(212, 175, 55, 0.35);
+      --accent-gradient: linear-gradient(135deg, #f7e089 0%, #d4af37 50%, #aa8210 100%);
+      --accent-text: #f9e7a2;
+      
+      --text-main: #f4f6f4;
+      --text-muted: #8fa597;
+      --glass-panel: rgba(10, 23, 17, 0.88);
+      --guide-stroke: #d4af37;
+      --canvas-light-bg: #ffffff;
+    }
+
+    :root[data-theme="sapphire"] {
+      --bg-deep: #050b16;
+      --bg-surface: #0a1324;
+      --bg-surface-elevated: #0f1c36;
+      --border-soft: rgba(217, 131, 78, 0.25);
+      --border-bright: rgba(217, 131, 78, 0.6);
+      
+      --accent-prime: #d9834e;
+      --accent-glow: rgba(217, 131, 78, 0.35);
+      --accent-gradient: linear-gradient(135deg, #f7aa7c 0%, #d9834e 50%, #9e4b1e 100%);
+      --accent-text: #fddbc7;
+      
+      --text-main: #f0f4fc;
+      --text-muted: #8294b5;
+      --glass-panel: rgba(10, 19, 36, 0.88);
+      --guide-stroke: #d9834e;
+      --canvas-light-bg: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg-deep);
+      color: var(--text-main);
+      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      height: 100vh;
+      height: 100dvh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: background-color 0.4s ease, color 0.4s ease;
+    }
+
+    /* TOP STATUS HEADER */
+    header {
+      height: 52px;
+      padding: 0 16px;
+      background: var(--glass-panel);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border-soft);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 40;
+    }
+
+    .brand-title {
+      font-family: 'Cinzel', serif;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      background: var(--accent-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .icon-btn {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-soft);
+      color: var(--text-muted);
+      height: 32px;
+      padding: 0 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .icon-btn:hover, .icon-btn.active {
+      color: var(--accent-text);
+      border-color: var(--accent-prime);
+      background: rgba(212, 175, 55, 0.1);
+    }
+
+    /* MAIN STAGE LIGHTBOX */
+    #stage-container {
+      flex: 1;
+      position: relative;
+      background: var(--canvas-light-bg);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.3s ease;
+    }
+
+    #stage-container.dark-mode {
+      background: #000000;
+    }
+
+    /* NAIL GUIDE OVERLAY */
+    #nail-guide-wrapper {
+      position: absolute;
+      pointer-events: none;
+      z-index: 15;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: width 0.08s ease, height 0.08s ease;
+    }
+
+    #nail-svg {
+      width: 100%;
+      height: 100%;
+      filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.35));
+    }
+
+    #nail-path {
+      stroke: var(--guide-stroke);
+      stroke-width: 2.2;
+      stroke-dasharray: 4 3;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: stroke 0.3s ease;
+    }
+
+    #image-stage {
+      position: absolute;
+      touch-action: none;
+      cursor: grab;
+      transform-origin: center center;
+      z-index: 5;
+    }
+
+    #image-stage:active {
+      cursor: grabbing;
+    }
+
+    #trace-img {
+      display: none;
+      max-width: 320px;
+      pointer-events: none;
+    }
+
+    #vector-preset {
+      display: none;
+      pointer-events: none;
+      width: 220px;
+      height: 320px;
+    }
+
+    /* TOUCH GUARD FOR LOCK MODE */
+    #touch-guard {
+      display: none;
+      position: absolute;
+      inset: 0;
+      background: transparent;
+      z-index: 50;
+      cursor: default;
+    }
+
+    /* FLOATING UNLOCK BUTTON */
+    #lock-banner {
+      display: none;
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      z-index: 60;
+    }
+
+    #unlock-btn {
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--accent-prime);
+      color: var(--accent-text);
+      box-shadow: 0 8px 24px var(--accent-glow);
+      padding: 10px 18px;
+      border-radius: 30px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* CONTROLS DRAWER */
+    #control-deck {
+      background: var(--glass-panel);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-top: 1px solid var(--border-soft);
+      padding: 12px 14px calc(12px + env(safe-area-inset-bottom));
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 30;
+      box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    /* ACTION BUTTON ROW */
+    .button-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 6px;
+    }
+
+    .btn {
+      background: var(--bg-surface-elevated);
+      color: var(--text-main);
+      border: 1px solid var(--border-soft);
+      height: 38px;
+      border-radius: 7px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+      padding: 0 4px;
+    }
+
+    .btn:active {
+      transform: scale(0.97);
+      border-color: var(--accent-prime);
+    }
+
+    .btn.primary {
+      background: var(--accent-gradient);
+      color: #0d1a12;
+      border: none;
+      font-weight: 700;
+      box-shadow: 0 2px 10px var(--accent-glow);
+    }
+
+    :root[data-theme="sapphire"] .btn.primary {
+      color: #07101f;
+    }
+
+    /* SELECT STYLES */
+    select.btn {
+      appearance: none;
+      -webkit-appearance: none;
+      padding: 0 16px 0 8px;
+      background-image: url('data:image/svg+xml;utf8,<svg fill="%23d4af37" height="12" viewBox="0 0 24 24" width="12" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+      background-repeat: no-repeat;
+      background-position: right 4px center;
+      text-align-last: center;
+    }
+
+    :root[data-theme="sapphire"] select.btn {
+      background-image: url('data:image/svg+xml;utf8,<svg fill="%23d9834e" height="12" viewBox="0 0 24 24" width="12" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+    }
+
+    /* SLIDERS MATRIX */
+    .slider-matrix {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 12px;
+      background: rgba(0, 0, 0, 0.25);
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border-soft);
+    }
+
+    .slider-cell {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .slider-label {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      min-width: 44px;
+    }
+
+    input[type="range"] {
+      flex: 1;
+      height: 4px;
+      border-radius: 2px;
+      background: rgba(255, 255, 255, 0.1);
+      accent-color: var(--accent-prime);
+      outline: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- STATUS HEADER -->
+  <header id="main-header">
+    <div class="brand-title">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+      </svg>
+      Atelier Trace
+    </div>
+
+    <div class="header-actions">
+      <!-- Theme Switcher -->
+      <button class="icon-btn" id="theme-toggle" title="Toggle Emerald / Sapphire Palette">
+        <span id="theme-name">✦ Emerald & Gold</span>
+      </button>
+
+      <!-- Lightbox Invert -->
+      <button class="icon-btn" id="bg-toggle" title="Light / Dark Stage">
+        <span id="bg-label">☼ Light</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- TRACING LIGHTBOX CANVAS -->
+  <main id="stage-container">
+    <!-- TOUCH LOCK SHIELD -->
+    <div id="touch-guard"></div>
+
+    <!-- FLOATING UNLOCK BUTTON -->
+    <div id="lock-banner">
+      <button id="unlock-btn">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+        </svg>
+        Studio Locked • Tap to Release
+      </button>
+    </div>
+
+    <!-- VECTOR NAIL TIP GUIDE -->
+    <div id="nail-guide-wrapper" style="width: 140px; height: 260px;">
+      <svg id="nail-svg" viewBox="0 0 100 190" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path id="nail-path" d="" />
+      </svg>
+    </div>
+
+    <!-- ARTWORK CONTAINER -->
+    <div id="image-stage">
+      <img id="trace-img" src="" alt="Custom trace reference" />
+
+      <!-- VECTOR PRESET GRAPHIC -->
+      <svg id="vector-preset" viewBox="0 0 100 180" fill="none" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <!-- Injected dynamically via JavaScript -->
+      </svg>
+    </div>
+  </main>
+
+  <!-- CONTROL DECK -->
+  <footer id="control-deck">
+    <div class="button-grid">
+      <!-- Image Upload -->
+      <label class="btn" style="grid-column: span 1;">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:3px;">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="17 8 12 3 7 8"></polyline>
+          <line x1="12" y1="3" x2="12" y2="15"></line>
+        </svg>
+        Load
+        <input type="file" id="file-input" accept="image/*" style="display:none;" />
+      </label>
+
+      <!-- Shape Selector -->
+      <select id="shape-select" class="btn" style="grid-column: span 1;">
+        <option value="almond">Almond</option>
+        <option value="coffin">Coffin</option>
+        <option value="stiletto">Stiletto</option>
+        <option value="square">Square</option>
+        <option value="squoval">Squoval</option>
+        <option value="oval">Oval</option>
+        <option value="none">No Guide</option>
+      </select>
+
+      <!-- Starter Presets -->
+      <select id="preset-select" class="btn" style="grid-column: span 1;">
+        <option value="none">Presets...</option>
+        <option value="celestial">Celestial</option>
+        <option value="botanical">Botanical</option>
+        <option value="gothic">Gothic Heart</option>
+        <option value="flame">Baroque Swirl</option>
+      </select>
+
+      <!-- Flips -->
+      <button class="btn" id="flip-h" title="Flip Horizontal">↔ Flip</button>
+      <button class="btn" id="flip-v" title="Flip Vertical">↕ Invert</button>
+
+      <!-- Lock Trigger -->
+      <button class="btn primary" id="lock-btn">🔒 Lock</button>
+    </div>
+
+    <!-- ADJUSTMENT MATRICES -->
+    <div class="slider-matrix">
+      <div class="slider-cell">
+        <span class="slider-label">Opacity</span>
+        <input type="range" id="opacity-slider" min="0.1" max="1" step="0.05" value="0.85" />
+      </div>
+
+      <div class="slider-cell">
+        <span class="slider-label">Zoom</span>
+        <input type="range" id="scale-slider" min="0.1" max="3" step="0.05" value="1" />
+      </div>
+
+      <div class="slider-cell">
+        <span class="slider-label">Length</span>
+        <input type="range" id="length-slider" min="70" max="480" step="5" value="260" />
+      </div>
+
+      <div class="slider-cell">
+        <span class="slider-label">Width</span>
+        <input type="range" id="width-slider" min="35" max="280" step="2" value="140" />
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // VECTOR NAIL CONTOURS (Cuticle bottom, tip top)
+    const NAIL_PATHS = {
+      almond: "M 20,165 C 20,185 80,185 80,165 C 80,115 72,55 50,10 C 28,55 20,115 20,165 Z",
+      coffin: "M 20,165 C 20,185 80,185 80,165 C 80,110 74,45 64,12 L 36,12 C 26,45 20,110 20,165 Z",
+      stiletto: "M 20,165 C 20,185 80,185 80,165 C 80,105 68,45 50,4 C 32,45 20,105 20,165 Z",
+      square: "M 18,165 C 18,185 82,185 82,165 L 82,12 L 18,12 Z",
+      squoval: "M 20,165 C 20,185 80,185 80,165 L 80,24 C 80,12 68,12 50,12 C 32,12 20,12 20,24 Z",
+      oval: "M 20,165 C 20,185 80,185 80,165 C 80,95 80,12 50,12 C 20,12 20,95 20,165 Z"
+    };
+
+    // STARTER VECTOR PRESETS
+    const PRESETS = {
+      celestial: `
+        <polygon points="50,18 53,30 65,30 55,38 59,50 50,42 41,50 45,38 35,30 47,30" fill="none" stroke="currentColor"/>
+        <circle cx="50" cy="85" r="18" fill="none" stroke="currentColor"/>
+        <path d="M 50,67 A 18 18 0 0 0 50,103 A 14 14 0 0 1 50,67" fill="currentColor"/>
+        <polygon points="50,135 52,143 60,143 54,148 56,156 50,151 44,156 46,148 40,143 48,143" fill="none" stroke="currentColor"/>
+      `,
+      botanical: `
+        <path d="M 50,170 Q 50,110 50,25" fill="none" stroke="currentColor" stroke-width="2"/>
+        <path d="M 50,140 Q 75,130 75,115 Q 60,115 50,130" fill="none" stroke="currentColor"/>
+        <path d="M 50,120 Q 25,110 25,95 Q 40,95 50,110" fill="none" stroke="currentColor"/>
+        <path d="M 50,90 Q 75,80 75,65 Q 60,65 50,80" fill="none" stroke="currentColor"/>
+        <path d="M 50,65 Q 25,55 25,40 Q 40,40 50,55" fill="none" stroke="currentColor"/>
+      `,
+      gothic: `
+        <path d="M 50,55 C 40,35 15,35 15,65 C 15,95 50,130 50,130 C 50,130 85,95 85,65 C 85,35 60,35 50,55 Z" fill="none" stroke="currentColor" stroke-width="2"/>
+        <line x1="50" y1="20" x2="50" y2="40" stroke="currentColor" stroke-width="2"/>
+        <line x1="40" y1="28" x2="60" y2="28" stroke="currentColor" stroke-width="2"/>
+      `,
+      flame: `
+        <path d="M 50,170 C 65,140 30,120 60,90 C 75,70 50,40 50,20 C 50,45 30,65 45,85 C 25,110 60,130 50,170 Z" fill="none" stroke="currentColor" stroke-width="2"/>
+      `
+    };
+
+    // DOM ELEMENTS
+    const root = document.documentElement;
+    const themeBtn = document.getElementById('theme-toggle');
+    const themeName = document.getElementById('theme-name');
+    const bgBtn = document.getElementById('bg-toggle');
+    const bgLabel = document.getElementById('bg-label');
+    const stage = document.getElementById('stage-container');
+    const touchGuard = document.getElementById('touch-guard');
+    const lockBanner = document.getElementById('lock-banner');
+    const lockBtn = document.getElementById('lock-btn');
+    const unlockBtn = document.getElementById('unlock-btn');
+    const mainHeader = document.getElementById('main-header');
+    const controlDeck = document.getElementById('control-deck');
+
+    const nailSvg = document.getElementById('nail-svg');
+    const nailPath = document.getElementById('nail-path');
+    const guideWrapper = document.getElementById('nail-guide-wrapper');
+    const shapeSelect = document.getElementById('shape-select');
+
+    const fileInput = document.getElementById('file-input');
+    const imgStage = document.getElementById('image-stage');
+    const traceImg = document.getElementById('trace-img');
+    const presetSvg = document.getElementById('vector-preset');
+    const presetSelect = document.getElementById('preset-select');
+
+    const flipHBtn = document.getElementById('flip-h');
+    const flipVBtn = document.getElementById('flip-v');
+    const opacitySlider = document.getElementById('opacity-slider');
+    const scaleSlider = document.getElementById('scale-slider');
+    const lengthSlider = document.getElementById('length-slider');
+    const widthSlider = document.getElementById('width-slider');
+
+    // TRANSFORMATION STATE
+    let posX = 0, posY = 0;
+    let startX = 0, startY = 0;
+    let isDragging = false;
+    let isFlippedH = false;
+    let isFlippedV = false;
+    let currentScale = 1;
+    let isLocked = false;
+
+    // Initialize Default Shape
+    nailPath.setAttribute('d', NAIL_PATHS.almond);
+
+    // PALETTE SWITCHER (Emerald/Gold <-> Sapphire/Copper)
+    themeBtn.addEventListener('click', () => {
+      const currentTheme = root.getAttribute('data-theme');
+      if (currentTheme === 'emerald') {
+        root.setAttribute('data-theme', 'sapphire');
+        themeName.textContent = '✦ Sapphire & Copper';
+      } else {
+        root.setAttribute('data-theme', 'emerald');
+        themeName.textContent = '✦ Emerald & Gold';
+      }
+    });
+
+    // LIGHTBOX INVERT (White <-> Black)
+    bgBtn.addEventListener('click', () => {
+      stage.classList.toggle('dark-mode');
+      const isDark = stage.classList.contains('dark-mode');
+      bgLabel.textContent = isDark ? '☾ Dark' : '☼ Light';
+      presetSvg.style.stroke = isDark ? '#ffffff' : '#111111';
+    });
+
+    // SHAPE PICKER
+    shapeSelect.addEventListener('change', (e) => {
+      const shape = e.target.value;
+      if (shape === 'none') {
+        nailSvg.style.display = 'none';
+      } else {
+        nailSvg.style.display = 'block';
+        nailPath.setAttribute('d', NAIL_PATHS[shape]);
+      }
+    });
+
+    // GUIDE SIZING
+    lengthSlider.addEventListener('input', (e) => {
+      guideWrapper.style.height = `${e.target.value}px`;
+    });
+
+    widthSlider.addEventListener('input', (e) => {
+      guideWrapper.style.width = `${e.target.value}px`;
+    });
+
+    // PRESET LOADER
+    presetSelect.addEventListener('change', (e) => {
+      const val = e.target.value;
+      if (val === 'none') {
+        presetSvg.style.display = 'none';
+      } else {
+        presetSvg.innerHTML = PRESETS[val];
+        presetSvg.style.display = 'block';
+        presetSvg.style.stroke = stage.classList.contains('dark-mode') ? '#fff' : '#111';
+        traceImg.style.display = 'none';
+        resetTransforms();
+      }
+    });
+
+    // FILE UPLOAD
+    fileInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          traceImg.src = event.target.result;
+          traceImg.style.display = 'block';
+          presetSvg.style.display = 'none';
+          presetSelect.value = 'none';
+          resetTransforms();
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    function resetTransforms() {
+      posX = 0;
+      posY = 0;
+      currentScale = 1;
+      scaleSlider.value = 1;
+      isFlippedH = false;
+      isFlippedV = false;
+      updateTransform();
+    }
+
+    function updateTransform() {
+      const scaleX = isFlippedH ? -currentScale : currentScale;
+      const scaleY = isFlippedV ? -currentScale : currentScale;
+      imgStage.style.transform = `translate(${posX}px, ${posY}px) scale(${scaleX}, ${scaleY})`;
+    }
+
+    // DRAGGING / TOUCH PAN
+    window.addEventListener('pointerdown', (e) => {
+      if (isLocked || e.target.closest('#control-deck') || e.target.closest('header') || e.target.closest('#lock-banner')) return;
+      isDragging = true;
+      startX = e.clientX - posX;
+      startY = e.clientY - posY;
+    });
+
+    window.addEventListener('pointermove', (e) => {
+      if (!isDragging || isLocked) return;
+      posX = e.clientX - startX;
+      posY = e.clientY - startY;
+      updateTransform();
+    });
+
+    window.addEventListener('pointerup', () => isDragging = false);
+
+    // FLIPS
+    flipHBtn.addEventListener('click', () => {
+      isFlippedH = !isFlippedH;
+      updateTransform();
+    });
+
+    flipVBtn.addEventListener('click', () => {
+      isFlippedV = !isFlippedV;
+      updateTransform();
+    });
+
+    // SLIDERS
+    opacitySlider.addEventListener('input', (e) => {
+      imgStage.style.opacity = e.target.value;
+    });
+
+    scaleSlider.addEventListener('input', (e) => {
+      currentScale = parseFloat(e.target.value);
+      updateTransform();
+    });
+
+    // LOCK MODE (Studio Lock Shield)
+    lockBtn.addEventListener('click', () => {
+      isLocked = true;
+      mainHeader.style.display = 'none';
+      controlDeck.style.display = 'none';
+      touchGuard.style.display = 'block';
+      lockBanner.style.display = 'block';
+    });
+
+    unlockBtn.addEventListener('click', () => {
+      isLocked = false;
+      mainHeader.style.display = 'flex';
+      controlDeck.style.display = 'flex';
+      touchGuard.style.display = 'none';
+      lockBanner.style.display = 'none';
+    });
+  </script>
+</body>
+</html>
