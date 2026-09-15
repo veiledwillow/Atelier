@@ -123,9 +123,9 @@
       transition: background-color 0.4s ease, color 0.4s ease;
     }
 
-    /* Fixed Top Header */
     header {
       height: 50px;
+      flex-shrink: 0;
       padding: 0 14px;
       background: var(--glass-panel);
       backdrop-filter: blur(14px);
@@ -256,7 +256,6 @@
       filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.35));
     }
 
-    /* Invisible Touch Guard in Lock Mode */
     #touch-guard {
       display: none;
       position: absolute;
@@ -265,8 +264,9 @@
       z-index: 50;
     }
 
-    /* Bottom Control Deck */
+    /* Bottom Deck with Fixed Height Frame */
     #control-deck {
+      flex-shrink: 0;
       background: var(--glass-panel);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
@@ -282,16 +282,14 @@
       display: flex;
       flex-direction: column;
       gap: 8px;
-      transition: opacity 0.25s ease;
     }
 
-    /* Elegant Locked Salon Plate (Replaces Deck Content) */
+    /* Elegant Locked Salon Plate */
     #locked-plate {
       display: none;
-      height: 48px;
       align-items: center;
       justify-content: space-between;
-      padding: 0 6px;
+      padding: 0 8px;
     }
 
     .locked-badge {
@@ -319,7 +317,7 @@
       border: 1px solid var(--accent-prime);
       color: var(--accent-text);
       box-shadow: 0 4px 16px var(--accent-glow);
-      height: 32px;
+      height: 34px;
       padding: 0 14px;
       border-radius: 20px;
       font-size: 10px;
@@ -352,7 +350,10 @@
     }
 
     body.is-locked #active-controls {
-      display: none;
+      visibility: hidden;
+      opacity: 0;
+      pointer-events: none;
+      position: absolute;
     }
 
     body.is-locked #locked-plate {
@@ -510,7 +511,6 @@
       .slider-panel { padding: 4px 8px; gap: 4px; }
       .slider-row { gap: 6px; }
       input[type="range"] { height: 22px; }
-      #locked-plate { height: 36px; }
     }
   </style>
 </head>
@@ -676,6 +676,8 @@
     const bgBtn = document.getElementById('bg-toggle');
     const bgLabel = document.getElementById('bg-label');
     const stage = document.getElementById('stage-container');
+    const controlDeck = document.getElementById('control-deck');
+    const lockedPlate = document.getElementById('locked-plate');
     const lockBtn = document.getElementById('lock-btn');
     const unlockBtn = document.getElementById('unlock-btn');
 
@@ -911,7 +913,6 @@
       }
     });
 
-    // Desktop Mouse support
     stage.addEventListener('mousedown', (e) => {
       if (isLocked) return;
       isDragging = true;
@@ -953,15 +954,23 @@
       scrimSurface.style.opacity = e.target.value;
     });
 
-    // Zero-Shift Elegant Salon Lock
+    // Rigid Zero-Shift Lock Engine
     lockBtn.addEventListener('click', () => {
+      const currentDeckHeight = controlDeck.getBoundingClientRect().height;
+      controlDeck.style.height = `${currentDeckHeight}px`;
+      lockedPlate.style.height = `${currentDeckHeight - 18}px`;
+
       isLocked = true;
       body.classList.add('is-locked');
+      updateRigGeometry();
     });
 
     unlockBtn.addEventListener('click', () => {
       isLocked = false;
       body.classList.remove('is-locked');
+      controlDeck.style.height = 'auto';
+      lockedPlate.style.height = 'auto';
+      updateRigGeometry();
     });
   </script>
 </body>
