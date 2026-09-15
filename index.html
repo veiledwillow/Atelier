@@ -123,10 +123,10 @@
       transition: background-color 0.4s ease, color 0.4s ease;
     }
 
-    /* Fixed Top Header (Non-collapsing) */
+    /* Fixed Top Header */
     header {
       height: 50px;
-      padding: 0 12px;
+      padding: 0 14px;
       background: var(--glass-panel);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
@@ -134,28 +134,31 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      position: relative;
       z-index: 40;
-      transition: opacity 0.25s ease, transform 0.25s ease;
+      transition: background 0.3s ease, border-color 0.3s ease;
     }
 
     .brand-title {
       font-family: 'Cinzel', serif;
       font-size: 13px;
       font-weight: 700;
-      letter-spacing: 1.5px;
+      letter-spacing: 2px;
       text-transform: uppercase;
       background: var(--accent-gradient);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 6px;
+      transition: all 0.3s ease;
     }
 
     .header-actions {
       display: flex;
       align-items: center;
       gap: 6px;
+      transition: opacity 0.25s ease;
     }
 
     .icon-btn {
@@ -163,7 +166,7 @@
       border: 1px solid var(--border-soft);
       color: var(--text-muted);
       height: 32px;
-      padding: 0 8px;
+      padding: 0 9px;
       border-radius: 6px;
       font-size: 11px;
       font-weight: 600;
@@ -187,7 +190,7 @@
       border: none;
       font-weight: 700;
       box-shadow: 0 2px 8px var(--accent-glow);
-      padding: 0 10px;
+      padding: 0 11px;
     }
 
     /* Fixed Canvas Area */
@@ -253,7 +256,7 @@
       filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.35));
     }
 
-    /* Touch Guard & Unlock Button */
+    /* Invisible Touch Guard in Lock Mode */
     #touch-guard {
       display: none;
       position: absolute;
@@ -262,64 +265,101 @@
       z-index: 50;
     }
 
-    #lock-banner {
-      display: none;
-      position: absolute;
-      top: 16px;
-      right: 16px;
-      z-index: 60;
-    }
-
-    #unlock-btn {
-      background: var(--bg-surface-elevated);
-      border: 1px solid var(--accent-prime);
-      color: var(--accent-text);
-      box-shadow: 0 8px 24px var(--accent-glow);
-      padding: 9px 16px;
-      border-radius: 30px;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    /* Fixed Bottom Deck (Non-collapsing) */
+    /* Bottom Control Deck */
     #control-deck {
       background: var(--glass-panel);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       border-top: 1px solid var(--border-soft);
       padding: 8px 12px calc(10px + env(safe-area-inset-bottom));
+      position: relative;
+      z-index: 30;
+      box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.4);
+      transition: background 0.3s ease, border-color 0.3s ease;
+    }
+
+    #active-controls {
       display: flex;
       flex-direction: column;
       gap: 8px;
-      z-index: 30;
-      box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.4);
-      transition: opacity 0.25s ease, transform 0.25s ease;
+      transition: opacity 0.25s ease;
     }
 
-    /* Locked Studio State: Fades controls without altering canvas size */
-    body.is-locked header {
-      opacity: 0;
-      pointer-events: none;
-      transform: translateY(-100%);
+    /* Elegant Locked Salon Plate (Replaces Deck Content) */
+    #locked-plate {
+      display: none;
+      height: 48px;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 6px;
     }
 
-    body.is-locked #control-deck {
+    .locked-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Cinzel', serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--accent-text);
+    }
+
+    .locked-status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent-prime);
+      box-shadow: 0 0 10px var(--accent-prime);
+    }
+
+    #unlock-btn {
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--accent-prime);
+      color: var(--accent-text);
+      box-shadow: 0 4px 16px var(--accent-glow);
+      height: 32px;
+      padding: 0 14px;
+      border-radius: 20px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s ease;
+    }
+
+    #unlock-btn:active {
+      transform: scale(0.96);
+    }
+
+    /* LOCKED STUDIO STATE */
+    body.is-locked header .header-actions {
       opacity: 0;
       pointer-events: none;
-      transform: translateY(100%);
+    }
+
+    body.is-locked header .brand-title {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 14px;
+      letter-spacing: 3px;
+    }
+
+    body.is-locked #active-controls {
+      display: none;
+    }
+
+    body.is-locked #locked-plate {
+      display: flex;
     }
 
     body.is-locked #touch-guard {
-      display: block;
-    }
-
-    body.is-locked #lock-banner {
       display: block;
     }
 
@@ -463,12 +503,14 @@
       header { height: 40px; padding: 0 10px; }
       .brand-title { font-size: 11px; }
       .icon-btn { height: 26px; padding: 0 6px; font-size: 10px; }
-      #control-deck { padding: 4px 10px calc(4px + env(safe-area-inset-bottom)); gap: 4px; }
+      #control-deck { padding: 4px 10px calc(4px + env(safe-area-inset-bottom)); }
+      #active-controls { gap: 4px; }
       .btn { height: 30px; font-size: 10px; }
       .tab-btn { height: 22px; font-size: 9px; }
       .slider-panel { padding: 4px 8px; gap: 4px; }
       .slider-row { gap: 6px; }
       input[type="range"] { height: 22px; }
+      #locked-plate { height: 36px; }
     }
   </style>
 </head>
@@ -500,16 +542,6 @@
   <main id="stage-container">
     <div id="touch-guard"></div>
 
-    <div id="lock-banner">
-      <button id="unlock-btn">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-        </svg>
-        Studio Locked • Tap to Release
-      </button>
-    </div>
-
     <!-- ARTWORK REFERENCE -->
     <div id="image-stage">
       <img id="trace-img" src="" alt="Trace reference" crossorigin="anonymous" />
@@ -524,79 +556,98 @@
         </mask>
       </defs>
 
-      <!-- The Dimmed Background Scrim -->
+      <!-- Dimmed Background Scrim -->
       <rect id="scrim-surface" width="100%" height="100%" mask="url(#scrim-mask)" />
 
-      <!-- The Gold Dashed Outline -->
+      <!-- Gold Dashed Outline -->
       <path id="guide-outline-path" d="" />
     </svg>
   </main>
 
   <footer id="control-deck">
-    <div class="button-grid">
-      <label class="btn">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:2px;">
-          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-          <polyline points="17 8 12 3 7 8"></polyline>
-          <line x1="12" y1="3" x2="12" y2="15"></line>
+    <!-- Active Editing Controls -->
+    <div id="active-controls">
+      <div class="button-grid">
+        <label class="btn">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:2px;">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="17 8 12 3 7 8"></polyline>
+            <line x1="12" y1="3" x2="12" y2="15"></line>
+          </svg>
+          Load
+          <input type="file" id="file-input" accept="image/*" style="display:none;" />
+        </label>
+
+        <select id="shape-select" class="btn">
+          <option value="almond">Almond</option>
+          <option value="coffin">Coffin</option>
+          <option value="stiletto">Stiletto</option>
+          <option value="square">Square</option>
+          <option value="squoval">Squoval</option>
+          <option value="oval">Oval</option>
+          <option value="none">No Guide</option>
+        </select>
+
+        <select id="preset-select" class="btn">
+          <option value="none">Flash Sheets...</option>
+          <option value="lines-french.png">French & Lines</option>
+          <option value="lace-mesh.png">Lace & Mesh</option>
+          <option value="gothic-romance.png">Gothic Romance</option>
+          <option value="celestial.png">Esoteric Celestial</option>
+          <option value="baroque-filigree.png">Baroque Filigree</option>
+          <option value="botanicals.png">Fine Botanicals</option>
+        </select>
+
+        <button class="btn" id="flip-h" title="Flip Horizontal">↔ Flip</button>
+        <button class="btn" id="flip-v" title="Flip Vertical">↕ Invert</button>
+      </div>
+
+      <div class="slider-tabs">
+        <button class="tab-btn active" id="tab-art">Artwork Sliders</button>
+        <button class="tab-btn" id="tab-guide">Nail Guide Sliders</button>
+      </div>
+
+      <div class="slider-panel" id="panel-art">
+        <div class="slider-row">
+          <span class="slider-label">Zoom</span>
+          <input type="range" id="scale-slider" min="0.1" max="6" step="0.05" value="1" />
+        </div>
+        <div class="slider-row">
+          <span class="slider-label" id="rotate-label">Rotate 0°</span>
+          <input type="range" id="rotate-slider" min="-180" max="180" step="1" value="0" />
+        </div>
+        <div class="slider-row">
+          <span class="slider-label">Outside Dim</span>
+          <input type="range" id="dim-slider" min="0" max="1" step="0.05" value="0.78" />
+        </div>
+      </div>
+
+      <div class="slider-panel" id="panel-guide" style="display: none;">
+        <div class="slider-row">
+          <span class="slider-label">Length</span>
+          <input type="range" id="length-slider" min="70" max="480" step="5" value="260" />
+        </div>
+        <div class="slider-row">
+          <span class="slider-label">Width</span>
+          <input type="range" id="width-slider" min="35" max="280" step="2" value="140" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Elegant Locked Salon Plate -->
+    <div id="locked-plate">
+      <div class="locked-badge">
+        <span class="locked-status-dot"></span>
+        Studio Locked
+      </div>
+
+      <button id="unlock-btn">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
         </svg>
-        Load
-        <input type="file" id="file-input" accept="image/*" style="display:none;" />
-      </label>
-
-      <select id="shape-select" class="btn">
-        <option value="almond">Almond</option>
-        <option value="coffin">Coffin</option>
-        <option value="stiletto">Stiletto</option>
-        <option value="square">Square</option>
-        <option value="squoval">Squoval</option>
-        <option value="oval">Oval</option>
-        <option value="none">No Guide</option>
-      </select>
-
-      <select id="preset-select" class="btn">
-        <option value="none">Flash Sheets...</option>
-        <option value="lines-french.png">French & Lines</option>
-        <option value="lace-mesh.png">Lace & Mesh</option>
-        <option value="gothic-romance.png">Gothic Romance</option>
-        <option value="celestial.png">Esoteric Celestial</option>
-        <option value="baroque-filigree.png">Baroque Filigree</option>
-        <option value="botanicals.png">Fine Botanicals</option>
-      </select>
-
-      <button class="btn" id="flip-h" title="Flip Horizontal">↔ Flip</button>
-      <button class="btn" id="flip-v" title="Flip Vertical">↕ Invert</button>
-    </div>
-
-    <div class="slider-tabs">
-      <button class="tab-btn active" id="tab-art">Artwork Sliders</button>
-      <button class="tab-btn" id="tab-guide">Nail Guide Sliders</button>
-    </div>
-
-    <div class="slider-panel" id="panel-art">
-      <div class="slider-row">
-        <span class="slider-label">Zoom</span>
-        <input type="range" id="scale-slider" min="0.1" max="6" step="0.05" value="1" />
-      </div>
-      <div class="slider-row">
-        <span class="slider-label" id="rotate-label">Rotate 0°</span>
-        <input type="range" id="rotate-slider" min="-180" max="180" step="1" value="0" />
-      </div>
-      <div class="slider-row">
-        <span class="slider-label">Outside Dim</span>
-        <input type="range" id="dim-slider" min="0" max="1" step="0.05" value="0.78" />
-      </div>
-    </div>
-
-    <div class="slider-panel" id="panel-guide" style="display: none;">
-      <div class="slider-row">
-        <span class="slider-label">Length</span>
-        <input type="range" id="length-slider" min="70" max="480" step="5" value="260" />
-      </div>
-      <div class="slider-row">
-        <span class="slider-label">Width</span>
-        <input type="range" id="width-slider" min="35" max="280" step="2" value="140" />
-      </div>
+        Release
+      </button>
     </div>
   </footer>
 
@@ -902,7 +953,7 @@
       scrimSurface.style.opacity = e.target.value;
     });
 
-    // Zero-Shift Lock Mode
+    // Zero-Shift Elegant Salon Lock
     lockBtn.addEventListener('click', () => {
       isLocked = true;
       body.classList.add('is-locked');
