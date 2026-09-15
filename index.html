@@ -196,6 +196,7 @@
       align-items: center;
       justify-content: center;
       transition: background-color 0.3s ease;
+      touch-action: none;
     }
 
     #stage-container.dark-mode {
@@ -217,7 +218,7 @@
       pointer-events: none;
     }
 
-    /* INTEGRATED SPOTLIGHT + OUTLINE RIG */
+    /* SYNCHRONIZED SPOTLIGHT + OUTLINE RIG */
     #spotlight-rig {
       position: absolute;
       inset: 0;
@@ -498,7 +499,7 @@
       <!-- The Dimmed Background Scrim -->
       <rect id="scrim-surface" width="100%" height="100%" mask="url(#scrim-mask)" />
 
-      <!-- The Gold Dashed Outline (Always 100% matched to cutout) -->
+      <!-- The Gold Dashed Outline -->
       <path id="guide-outline-path" d="" />
     </svg>
   </main>
@@ -640,7 +641,6 @@
     let guideH = 260;
     let currentShape = 'almond';
 
-    // Synchronize both spotlight hole and gold outline together
     function updateRigGeometry() {
       if (currentShape === 'none') {
         spotlightRig.style.display = 'none';
@@ -652,7 +652,6 @@
       const originX = rect.width / 2;
       const originY = rect.height / 2;
 
-      // Base viewBox reference is 100 x 190
       const sx = guideW / 100;
       const sy = guideH / 190;
       const tx = originX - (guideW / 2);
@@ -757,21 +756,101 @@
       imgStage.style.transform = `translate(${posX}px, ${posY}px) rotate(${currentRotation}deg) scale(${scaleX}, ${scaleY})`;
     }
 
-    window.addEventListener('pointerdown', (e) => {
-      if (isLocked || e.target.closest('#control-deck') || e.target.closest('header') || e.target.closest('#lock-banner')) return;
+    // MULTI-TOUCH GESTURE ENGINE (1-finger drag, 2-finger pinch & twist)
+    let initialDistance = 0;
+    let initialAngle = 0;
+    let initialScale = 1;
+    let initialRotation = 0;
+    let isTouchActive = false;
+
+    function getDistance(t1, t2) {
+      const dx = t1.clientX - t2.clientX;
+      const dy = t1.clientY - t2.clientY;
+      return Math.hypot(dx, dy);
+    }
+
+    function getAngle(t1, t2) {
+      const dx = t2.clientX - t1.clientX;
+      const dy = t2.clientY - t1.clientY;
+      return Math.atan2(dy, dx) * (180 / Math.PI);
+    }
+
+    stage.addEventListener('touchstart', (e) => {
+      if (isLocked) return;
+
+      if (e.touches.length === 1) {
+        isDragging = true;
+        startX = e.touches[0].clientX - posX;
+        startY = e.touches[0].clientY - posY;
+      } else if (e.touches.length === 2) {
+        isDragging = false;
+        isTouchActive = true;
+        initialDistance = getDistance(e.touches[0], e.touches[1]);
+        initialAngle = getAngle(e.touches[0], e.touches[1]);
+        initialScale = currentScale;
+        initialRotation = currentRotation;
+      }
+    }, { passive: false });
+
+    stage.addEventListener('touchmove', (e) => {
+      if (isLocked) return;
+      e.preventDefault();
+
+      if (e.touches.length === 1 && isDragging) {
+        posX = e.touches[0].clientX - startX;
+        posY = e.touches[0].clientY - startY;
+        updateTransform();
+      } else if (e.touches.length === 2 && isTouchActive) {
+        const currentDistance = getDistance(e.touches[0], e.touches[1]);
+        if (initialDistance > 0) {
+          const factor = currentDistance / initialDistance;
+          currentScale = Math.min(Math.max(initialScale * factor, 0.1), 6);
+          scaleSlider.value = currentScale;
+        }
+
+        const currentTouchAngle = getAngle(e.touches[0], e.touches[1]);
+        const deltaAngle = currentTouchAngle - initialAngle;
+        let newRot = Math.round(initialRotation + deltaAngle);
+        
+        while (newRot > 180) newRot -= 360;
+        while (newRot < -180) newRot += 360;
+
+        currentRotation = newRot;
+        rotateSlider.value = currentRotation;
+        rotateLabel.textContent = `Rotate ${currentRotation}°`;
+
+        updateTransform();
+      }
+    }, { passive: false });
+
+    stage.addEventListener('touchend', (e) => {
+      if (e.touches.length === 0) {
+        isDragging = false;
+        isTouchActive = false;
+      } else if (e.touches.length === 1) {
+        isTouchActive = false;
+        isDragging = true;
+        startX = e.touches[0].clientX - posX;
+        startY = e.touches[0].clientY - posY;
+      }
+    });
+
+    // Mouse Controls (for desktop testing)
+    stage.addEventListener('mousedown', (e) => {
+      if (isLocked) return;
       isDragging = true;
       startX = e.clientX - posX;
       startY = e.clientY - posY;
     });
 
-    window.addEventListener('pointermove', (e) => {
+    window.addEventListener('mousemove', (e) => {
       if (!isDragging || isLocked) return;
       posX = e.clientX - startX;
       posY = e.clientY - startY;
       updateTransform();
     });
 
-    window.addEventListener('pointerup', () => isDragging = false);
+    window.addEventListener('mouseup', () => isDragging = false);
 
     flipHBtn.addEventListener('click', () => {
       isFlippedH = !isFlippedH;
