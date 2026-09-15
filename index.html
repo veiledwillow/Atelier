@@ -119,9 +119,11 @@
       overflow: hidden;
       display: flex;
       flex-direction: column;
+      position: relative;
       transition: background-color 0.4s ease, color 0.4s ease;
     }
 
+    /* Fixed Top Header (Non-collapsing) */
     header {
       height: 50px;
       padding: 0 12px;
@@ -133,6 +135,7 @@
       align-items: center;
       justify-content: space-between;
       z-index: 40;
+      transition: opacity 0.25s ease, transform 0.25s ease;
     }
 
     .brand-title {
@@ -187,6 +190,7 @@
       padding: 0 10px;
     }
 
+    /* Fixed Canvas Area */
     #stage-container {
       flex: 1;
       position: relative;
@@ -203,7 +207,7 @@
       background: #000000;
     }
 
-    /* ARTWORK LAYER */
+    /* Artwork Stage */
     #image-stage {
       position: absolute;
       touch-action: none;
@@ -218,7 +222,7 @@
       pointer-events: none;
     }
 
-    /* SYNCHRONIZED SPOTLIGHT + OUTLINE RIG */
+    /* Synchronized Spotlight Rig */
     #spotlight-rig {
       position: absolute;
       inset: 0;
@@ -249,6 +253,7 @@
       filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.35));
     }
 
+    /* Touch Guard & Unlock Button */
     #touch-guard {
       display: none;
       position: absolute;
@@ -260,8 +265,8 @@
     #lock-banner {
       display: none;
       position: absolute;
-      top: 18px;
-      right: 18px;
+      top: 16px;
+      right: 16px;
       z-index: 60;
     }
 
@@ -270,7 +275,7 @@
       border: 1px solid var(--accent-prime);
       color: var(--accent-text);
       box-shadow: 0 8px 24px var(--accent-glow);
-      padding: 10px 18px;
+      padding: 9px 16px;
       border-radius: 30px;
       font-size: 11px;
       font-weight: 700;
@@ -282,6 +287,7 @@
       gap: 6px;
     }
 
+    /* Fixed Bottom Deck (Non-collapsing) */
     #control-deck {
       background: var(--glass-panel);
       backdrop-filter: blur(16px);
@@ -293,6 +299,28 @@
       gap: 8px;
       z-index: 30;
       box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.4);
+      transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+
+    /* Locked Studio State: Fades controls without altering canvas size */
+    body.is-locked header {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-100%);
+    }
+
+    body.is-locked #control-deck {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(100%);
+    }
+
+    body.is-locked #touch-guard {
+      display: block;
+    }
+
+    body.is-locked #lock-banner {
+      display: block;
     }
 
     .button-grid {
@@ -591,17 +619,14 @@
     let currentThemeIndex = 0;
 
     const root = document.documentElement;
+    const body = document.body;
     const themeBtn = document.getElementById('theme-toggle');
     const themeName = document.getElementById('theme-name');
     const bgBtn = document.getElementById('bg-toggle');
     const bgLabel = document.getElementById('bg-label');
     const stage = document.getElementById('stage-container');
-    const touchGuard = document.getElementById('touch-guard');
-    const lockBanner = document.getElementById('lock-banner');
     const lockBtn = document.getElementById('lock-btn');
     const unlockBtn = document.getElementById('unlock-btn');
-    const mainHeader = document.getElementById('main-header');
-    const controlDeck = document.getElementById('control-deck');
 
     const spotlightRig = document.getElementById('spotlight-rig');
     const scrimSurface = document.getElementById('scrim-surface');
@@ -756,7 +781,7 @@
       imgStage.style.transform = `translate(${posX}px, ${posY}px) rotate(${currentRotation}deg) scale(${scaleX}, ${scaleY})`;
     }
 
-    // MULTI-TOUCH GESTURE ENGINE (1-finger drag, 2-finger pinch & twist)
+    // MULTI-TOUCH GESTURE ENGINE (Pinch, Twist, Pan)
     let initialDistance = 0;
     let initialAngle = 0;
     let initialScale = 1;
@@ -835,7 +860,7 @@
       }
     });
 
-    // Mouse Controls (for desktop testing)
+    // Desktop Mouse support
     stage.addEventListener('mousedown', (e) => {
       if (isLocked) return;
       isDragging = true;
@@ -877,20 +902,15 @@
       scrimSurface.style.opacity = e.target.value;
     });
 
+    // Zero-Shift Lock Mode
     lockBtn.addEventListener('click', () => {
       isLocked = true;
-      mainHeader.style.display = 'none';
-      controlDeck.style.display = 'none';
-      touchGuard.style.display = 'block';
-      lockBanner.style.display = 'block';
+      body.classList.add('is-locked');
     });
 
     unlockBtn.addEventListener('click', () => {
       isLocked = false;
-      mainHeader.style.display = 'flex';
-      controlDeck.style.display = 'flex';
-      touchGuard.style.display = 'none';
-      lockBanner.style.display = 'none';
+      body.classList.remove('is-locked');
     });
   </script>
 </body>
