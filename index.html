@@ -33,7 +33,6 @@
       --glass-panel: rgba(10, 23, 17, 0.94);
       --guide-stroke: #d4af37;
       --canvas-light-bg: #ffffff;
-      --vector-color: #1a241e;
       --select-arrow: url('data:image/svg+xml;utf8,<svg fill="%23d4af37" height="12" viewBox="0 0 24 24" width="12" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
       --btn-primary-text: #0d1a12;
     }
@@ -54,7 +53,6 @@
       --glass-panel: rgba(10, 19, 36, 0.94);
       --guide-stroke: #d9834e;
       --canvas-light-bg: #ffffff;
-      --vector-color: #101c30;
       --select-arrow: url('data:image/svg+xml;utf8,<svg fill="%23d9834e" height="12" viewBox="0 0 24 24" width="12" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
       --btn-primary-text: #07101f;
     }
@@ -75,7 +73,6 @@
       --glass-panel: rgba(16, 18, 22, 0.94);
       --guide-stroke: #cbd5e1;
       --canvas-light-bg: #ffffff;
-      --vector-color: #121418;
       --select-arrow: url('data:image/svg+xml;utf8,<svg fill="%23cbd5e1" height="12" viewBox="0 0 24 24" width="12" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
       --btn-primary-text: #0b0f14;
     }
@@ -96,7 +93,6 @@
       --glass-panel: rgba(26, 10, 23, 0.94);
       --guide-stroke: #eaa0a9;
       --canvas-light-bg: #ffffff;
-      --vector-color: #241021;
       --select-arrow: url('data:image/svg+xml;utf8,<svg fill="%23eaa0a9" height="12" viewBox="0 0 24 24" width="12" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
       --btn-primary-text: #1d071a;
     }
@@ -124,7 +120,7 @@
 
     header {
       height: 50px;
-      padding: 0 14px;
+      padding: 0 12px;
       background: var(--glass-panel);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
@@ -137,37 +133,37 @@
 
     .brand-title {
       font-family: 'Cinzel', serif;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 700;
-      letter-spacing: 2px;
+      letter-spacing: 1.5px;
       text-transform: uppercase;
       background: var(--accent-gradient);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
     }
 
     .header-actions {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
     }
 
     .icon-btn {
       background: rgba(255, 255, 255, 0.04);
       border: 1px solid var(--border-soft);
       color: var(--text-muted);
-      height: 30px;
-      padding: 0 9px;
+      height: 32px;
+      padding: 0 8px;
       border-radius: 6px;
       font-size: 11px;
       font-weight: 600;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.3px;
       display: inline-flex;
       align-items: center;
-      gap: 5px;
+      gap: 4px;
       cursor: pointer;
       transition: all 0.2s ease;
     }
@@ -176,6 +172,15 @@
       color: var(--accent-text);
       border-color: var(--accent-prime);
       background: rgba(255, 255, 255, 0.08);
+    }
+
+    .icon-btn.lock-accent {
+      background: var(--accent-gradient);
+      color: var(--btn-primary-text);
+      border: none;
+      font-weight: 700;
+      box-shadow: 0 2px 8px var(--accent-glow);
+      padding: 0 10px;
     }
 
     #stage-container {
@@ -191,10 +196,6 @@
 
     #stage-container.dark-mode {
       background: #000000;
-    }
-
-    #stage-container.dark-mode #vector-preset {
-      color: #f1f5f9 !important;
     }
 
     #nail-guide-wrapper {
@@ -227,24 +228,12 @@
       cursor: grab;
       transform-origin: center center;
       z-index: 5;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
 
     #trace-img {
       display: none;
       max-width: 320px;
       pointer-events: none;
-    }
-
-    #vector-preset {
-      display: none;
-      pointer-events: none;
-      width: 260px;
-      height: 380px;
-      color: var(--vector-color);
-      transition: color 0.3s ease;
     }
 
     #touch-guard {
@@ -285,17 +274,17 @@
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       border-top: 1px solid var(--border-soft);
-      padding: 10px 14px calc(14px + env(safe-area-inset-bottom));
+      padding: 8px 12px calc(10px + env(safe-area-inset-bottom));
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 8px;
       z-index: 30;
       box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.4);
     }
 
     .button-grid {
       display: grid;
-      grid-template-columns: repeat(6, 1fr);
+      grid-template-columns: 1.1fr 1.2fr 1.5fr 1fr 1fr;
       gap: 6px;
     }
 
@@ -322,18 +311,10 @@
       border-color: var(--accent-prime);
     }
 
-    .btn.primary {
-      background: var(--accent-gradient);
-      color: var(--btn-primary-text);
-      border: none;
-      font-weight: 700;
-      box-shadow: 0 2px 10px var(--accent-glow);
-    }
-
     select.btn {
       appearance: none;
       -webkit-appearance: none;
-      padding: 0 16px 0 8px;
+      padding: 0 16px 0 6px;
       background-image: var(--select-arrow);
       background-repeat: no-repeat;
       background-position: right 4px center;
@@ -351,11 +332,11 @@
 
     .tab-btn {
       flex: 1;
-      height: 28px;
+      height: 26px;
       background: transparent;
       border: none;
       color: var(--text-muted);
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 700;
       letter-spacing: 0.5px;
       text-transform: uppercase;
@@ -373,8 +354,8 @@
     .slider-panel {
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      padding: 10px 12px;
+      gap: 8px;
+      padding: 8px 10px;
       background: rgba(0, 0, 0, 0.25);
       border-radius: 8px;
       border: 1px solid var(--border-soft);
@@ -383,21 +364,21 @@
     .slider-row {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
 
     .slider-label {
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.8px;
+      letter-spacing: 0.7px;
       color: var(--text-muted);
-      min-width: 60px;
+      min-width: 54px;
     }
 
     input[type="range"] {
       flex: 1;
-      height: 32px;
+      height: 28px;
       background: transparent;
       outline: none;
       cursor: pointer;
@@ -414,12 +395,12 @@
 
     input[type="range"]::-webkit-slider-thumb {
       -webkit-appearance: none;
-      height: 24px;
-      width: 24px;
+      height: 22px;
+      width: 22px;
       border-radius: 50%;
       background: var(--accent-gradient);
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
-      margin-top: -9px;
+      margin-top: -8px;
       border: 2px solid var(--bg-deep);
     }
 
@@ -430,11 +411,24 @@
     }
 
     input[type="range"]::-moz-range-thumb {
-      height: 24px;
-      width: 24px;
+      height: 22px;
+      width: 22px;
       border-radius: 50%;
       background: var(--accent-gradient);
       border: 2px solid var(--bg-deep);
+    }
+
+    /* Landscape Mode Optimizations */
+    @media (orientation: landscape) and (max-height: 500px) {
+      header { height: 40px; padding: 0 10px; }
+      .brand-title { font-size: 11px; }
+      .icon-btn { height: 26px; padding: 0 6px; font-size: 10px; }
+      #control-deck { padding: 4px 10px calc(4px + env(safe-area-inset-bottom)); gap: 4px; }
+      .btn { height: 30px; font-size: 10px; }
+      .tab-btn { height: 22px; font-size: 9px; }
+      .slider-panel { padding: 4px 8px; gap: 4px; }
+      .slider-row { gap: 6px; }
+      input[type="range"] { height: 22px; }
     }
   </style>
 </head>
@@ -442,7 +436,7 @@
 
   <header id="main-header">
     <div class="brand-title">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
         <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
       </svg>
       Atelier Trace
@@ -450,11 +444,16 @@
 
     <div class="header-actions">
       <button class="icon-btn" id="theme-toggle" title="Cycle Palette">
-        <span id="theme-name">✦ Emerald & Gold</span>
+        <span id="theme-name">✦ Emerald</span>
       </button>
 
       <button class="icon-btn" id="bg-toggle" title="Light / Dark Stage">
         <span id="bg-label">☼ Light</span>
+      </button>
+
+      <!-- Lock Relocated to Header: Permanent & Accessible -->
+      <button class="icon-btn lock-accent" id="lock-btn">
+        🔒 Lock
       </button>
     </div>
   </header>
@@ -480,14 +479,13 @@
 
     <div id="image-stage">
       <img id="trace-img" src="" alt="Custom trace reference" crossorigin="anonymous" />
-      <svg id="vector-preset" viewBox="0 0 100 200" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"></svg>
     </div>
   </main>
 
   <footer id="control-deck">
     <div class="button-grid">
-      <label class="btn" style="grid-column: span 1;">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:3px;">
+      <label class="btn">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:2px;">
           <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
           <polyline points="17 8 12 3 7 8"></polyline>
           <line x1="12" y1="3" x2="12" y2="15"></line>
@@ -496,7 +494,7 @@
         <input type="file" id="file-input" accept="image/*" style="display:none;" />
       </label>
 
-      <select id="shape-select" class="btn" style="grid-column: span 1;">
+      <select id="shape-select" class="btn">
         <option value="almond">Almond</option>
         <option value="coffin">Coffin</option>
         <option value="stiletto">Stiletto</option>
@@ -506,33 +504,30 @@
         <option value="none">No Guide</option>
       </select>
 
-      <select id="preset-select" class="btn" style="grid-column: span 1;">
+      <select id="preset-select" class="btn">
         <option value="none">Presets...</option>
-        <option value="stained_glass">Stained Glass Sheet</option>
-        <option value="rose">Wild Gothic Rose</option>
-        <option value="baroque">Baroque Filigree Crown</option>
-        <option value="celestial">Celestial Sun & Moon</option>
-        <option value="botanical">Bespoke Botanical Vine</option>
-        <option value="sacred">Sacred Heart & Dagger</option>
-        <option value="cyber">Tribal Chrome Cyber</option>
+        <option value="stained_glass">Stained Glass</option>
       </select>
 
       <button class="btn" id="flip-h" title="Flip Horizontal">↔ Flip</button>
       <button class="btn" id="flip-v" title="Flip Vertical">↕ Invert</button>
-
-      <button class="btn primary" id="lock-btn">🔒 Lock</button>
     </div>
 
-    <!-- CLEAN TWO-TAB SYSTEM FOR SLIDERS -->
+    <!-- TABS -->
     <div class="slider-tabs">
       <button class="tab-btn active" id="tab-art">Artwork Sliders</button>
       <button class="tab-btn" id="tab-guide">Nail Guide Sliders</button>
     </div>
 
+    <!-- ARTWORK CONTROLS WITH ROTATE FREEDOM -->
     <div class="slider-panel" id="panel-art">
       <div class="slider-row">
         <span class="slider-label">Zoom</span>
         <input type="range" id="scale-slider" min="0.1" max="6" step="0.05" value="1" />
+      </div>
+      <div class="slider-row">
+        <span class="slider-label" id="rotate-label">Rotate 0°</span>
+        <input type="range" id="rotate-slider" min="-180" max="180" step="1" value="0" />
       </div>
       <div class="slider-row">
         <span class="slider-label">Opacity</span>
@@ -540,6 +535,7 @@
       </div>
     </div>
 
+    <!-- GUIDE SIZING -->
     <div class="slider-panel" id="panel-guide" style="display: none;">
       <div class="slider-row">
         <span class="slider-label">Length</span>
@@ -562,105 +558,11 @@
       oval: "M 20,165 C 20,185 80,185 80,165 C 80,95 80,12 50,12 C 20,12 20,95 20,165 Z"
     };
 
-    // BESPOKE SALON-GRADE VECTOR ART FOR FULL-BED TRACING
-    const PRESETS = {
-      rose: `
-        <!-- Heart of the Rose Bloom -->
-        <path d="M 50,70 C 44,64 45,55 52,56 C 58,57 60,67 50,72 C 40,77 36,65 42,52 C 49,43 65,48 64,66 C 63,80 43,84 34,70 C 26,57 37,38 52,38 C 69,38 78,56 72,76 C 66,94 40,96 30,82 C 20,68 28,45 42,32 C 58,19 82,32 80,60 C 78,92 48,105 32,95 C 18,85 18,52 35,30 C 52,10 82,18 88,48 C 94,76 74,108 50,114" fill="none"/>
-        <!-- Rose Calyx & Stem -->
-        <path d="M 50,114 C 48,135 53,165 48,195" fill="none" stroke-width="2.8"/>
-        <!-- Thorny Accents -->
-        <path d="M 50,132 Q 58,128 62,132" fill="none"/>
-        <path d="M 49,158 Q 41,154 38,158" fill="none"/>
-        <path d="M 49,178 Q 57,175 60,180" fill="none"/>
-        <!-- Detailed Botanical Leaves -->
-        <path d="M 50,138 C 65,130 82,135 84,150 C 72,154 58,146 50,138 Z" fill="none"/>
-        <path d="M 50,138 Q 68,143 84,150" fill="none" stroke-width="1.2"/>
-        <path d="M 49,164 C 32,156 16,162 14,178 C 28,181 42,172 49,164 Z" fill="none"/>
-        <path d="M 49,164 Q 30,170 14,178" fill="none" stroke-width="1.2"/>
-      `,
-      baroque: `
-        <!-- Crown Apex Tiara -->
-        <circle cx="50" cy="18" r="3.5" fill="currentColor"/>
-        <path d="M 50,22 L 50,38 M 42,30 L 58,30" fill="none"/>
-        <path d="M 50,38 C 65,22 84,32 78,50 C 72,66 56,66 50,80 C 44,66 28,66 22,50 C 16,32 35,22 50,38 Z" fill="none"/>
-        <circle cx="50" cy="52" r="4.5" fill="none"/>
-        <!-- Center Gemstone Shield -->
-        <polygon points="50,92 68,110 50,140 32,110" fill="none"/>
-        <polygon points="50,100 62,112 50,130 38,112" fill="none" stroke-dasharray="2 2"/>
-        <!-- Flanking Baroque Arabesques -->
-        <path d="M 32,110 C 18,105 10,122 18,136 C 26,148 40,138 48,152 C 50,165 44,185 50,195 C 56,185 50,165 52,152 C 60,138 74,148 82,136 C 90,122 82,105 68,110" fill="none"/>
-        <!-- Flourish Droplets -->
-        <circle cx="50" cy="165" r="2.5" fill="currentColor"/>
-        <circle cx="50" cy="182" r="1.8" fill="currentColor"/>
-      `,
-      celestial: `
-        <!-- Crescent Moon Arch -->
-        <path d="M 58,35 A 36 36 0 1 0 58,115 A 28 28 0 1 1 58,35 Z" fill="none" stroke-width="2.6"/>
-        <!-- Central Sunburst Core -->
-        <circle cx="48" cy="75" r="8" fill="none"/>
-        <circle cx="48" cy="75" r="3" fill="currentColor"/>
-        <!-- Radiating Star Rays -->
-        <line x1="48" y1="52" x2="48" y2="62"/>
-        <line x1="48" y1="88" x2="48" y2="98"/>
-        <line x1="25" y1="75" x2="35" y2="75"/>
-        <line x1="61" y1="75" x2="71" y2="75"/>
-        <!-- Major North Celestial Star -->
-        <path d="M 50,130 Q 50,148 38,148 Q 50,148 50,166 Q 50,148 62,148 Q 50,148 50,130 Z" fill="none"/>
-        <!-- Minor Trailing Stars -->
-        <path d="M 30,30 Q 30,38 24,38 Q 30,38 30,46 Q 30,38 36,38 Q 30,38 30,30 Z" fill="none"/>
-        <circle cx="75" cy="45" r="1.8" fill="currentColor"/>
-        <circle cx="25" cy="115" r="1.5" fill="currentColor"/>
-        <circle cx="68" cy="140" r="1.8" fill="currentColor"/>
-        <!-- Draped Astral Beading -->
-        <path d="M 28,175 Q 50,190 72,175" fill="none" stroke-dasharray="2 3"/>
-      `,
-      botanical: `
-        <!-- Graceful Central Stem -->
-        <path d="M 50,195 C 44,145 60,85 48,15" fill="none" stroke-width="2.5"/>
-        <!-- Lower Leaf Pair -->
-        <path d="M 48,165 C 28,162 20,148 24,136 C 36,134 46,146 48,155" fill="none"/>
-        <path d="M 50,150 C 70,145 78,130 74,120 C 62,120 52,134 50,142" fill="none"/>
-        <!-- Mid-Bed Foliage -->
-        <path d="M 49,122 C 26,118 18,102 24,90 C 36,90 46,104 49,112" fill="none"/>
-        <path d="M 52,108 C 74,100 80,85 76,72 C 64,74 54,88 52,98" fill="none"/>
-        <!-- Delicate Tip Tendrils & Buds -->
-        <path d="M 49,78 C 30,72 25,58 32,48 C 42,50 48,62 49,70" fill="none"/>
-        <path d="M 51,64 C 68,54 70,42 64,34 C 54,38 51,50 51,56" fill="none"/>
-        <circle cx="48" cy="14" r="2.5" fill="currentColor"/>
-      `,
-      sacred: `
-        <!-- Piercing Stiletto Dagger -->
-        <path d="M 50,10 L 54,40 L 50,190 L 46,40 Z" fill="none" stroke-width="2.5"/>
-        <line x1="32" y1="35" x2="68" y2="35" stroke-width="3"/>
-        <circle cx="50" cy="16" r="4" fill="currentColor"/>
-        <!-- Sacred Heart Curves -->
-        <path d="M 50,75 C 34,50 14,70 26,98 C 36,118 48,135 50,145 C 52,135 64,118 74,98 C 86,70 66,50 50,75 Z" fill="none" stroke-width="2.5"/>
-        <!-- Radiating Aura Halos -->
-        <path d="M 28,65 Q 16,85 22,112" fill="none" stroke-dasharray="3 3"/>
-        <path d="M 72,65 Q 84,85 78,112" fill="none" stroke-dasharray="3 3"/>
-        <!-- Crown of Thorns Wrap -->
-        <path d="M 28,95 Q 50,110 72,95" fill="none" stroke-width="2"/>
-        <path d="M 38,98 L 34,104 M 62,98 L 66,104" fill="none"/>
-      `,
-      cyber: `
-        <!-- Y2K Neo-Tribal Chrome Flame -->
-        <path d="M 50,12 C 55,42 68,52 64,72 C 60,90 42,88 50,112 C 56,128 72,130 68,155 C 64,178 54,185 50,195 C 46,185 36,178 32,155 C 28,130 44,128 50,112 C 58,88 40,90 36,72 C 32,52 45,42 50,12 Z" fill="none" stroke-width="2.6"/>
-        <!-- Flanking Razor Barbs -->
-        <path d="M 62,65 Q 82,72 86,55 Q 74,85 58,95" fill="none"/>
-        <path d="M 38,65 Q 18,72 14,55 Q 26,85 42,95" fill="none"/>
-        <path d="M 64,120 Q 86,130 88,112 Q 76,145 56,155" fill="none"/>
-        <path d="M 36,120 Q 14,130 12,112 Q 24,145 44,155" fill="none"/>
-        <!-- Core Diamond Piercing -->
-        <polygon points="50,92 56,106 50,120 44,106" fill="currentColor"/>
-      `
-    };
-
     const THEMES = [
-      { id: 'emerald', label: '✦ Emerald & Gold' },
-      { id: 'sapphire', label: '✦ Sapphire & Copper' },
-      { id: 'obsidian', label: '✦ Obsidian & Platinum' },
-      { id: 'plum', label: '✦ Plum & Rose Gold' }
+      { id: 'emerald', label: '✦ Emerald' },
+      { id: 'sapphire', label: '✦ Sapphire' },
+      { id: 'obsidian', label: '✦ Obsidian' },
+      { id: 'plum', label: '✦ Plum' }
     ];
     let currentThemeIndex = 0;
 
@@ -691,13 +593,14 @@
     const fileInput = document.getElementById('file-input');
     const imgStage = document.getElementById('image-stage');
     const traceImg = document.getElementById('trace-img');
-    const presetSvg = document.getElementById('vector-preset');
     const presetSelect = document.getElementById('preset-select');
 
     const flipHBtn = document.getElementById('flip-h');
     const flipVBtn = document.getElementById('flip-v');
     const opacitySlider = document.getElementById('opacity-slider');
     const scaleSlider = document.getElementById('scale-slider');
+    const rotateSlider = document.getElementById('rotate-slider');
+    const rotateLabel = document.getElementById('rotate-label');
     const lengthSlider = document.getElementById('length-slider');
     const widthSlider = document.getElementById('width-slider');
 
@@ -712,6 +615,7 @@
     let isFlippedH = false;
     let isFlippedV = false;
     let currentScale = 1;
+    let currentRotation = 0;
     let isLocked = false;
 
     nailPath.setAttribute('d', NAIL_PATHS.almond);
@@ -764,26 +668,17 @@
     presetSelect.addEventListener('change', (e) => {
       const val = e.target.value;
       if (val === 'none') {
-        presetSvg.style.display = 'none';
         traceImg.style.display = 'none';
       } else if (val === 'stained_glass') {
-        presetSvg.style.display = 'none';
         let attempt = 0;
-        
         traceImg.onerror = () => {
           attempt++;
           if (attempt < STAINED_GLASS_SOURCES.length) {
             traceImg.src = STAINED_GLASS_SOURCES[attempt];
           }
         };
-
         traceImg.src = STAINED_GLASS_SOURCES[0];
         traceImg.style.display = 'block';
-        resetTransforms();
-      } else {
-        traceImg.style.display = 'none';
-        presetSvg.innerHTML = PRESETS[val] || '';
-        presetSvg.style.display = 'block';
         resetTransforms();
       }
     });
@@ -795,7 +690,6 @@
         reader.onload = (event) => {
           traceImg.src = event.target.result;
           traceImg.style.display = 'block';
-          presetSvg.style.display = 'none';
           presetSelect.value = 'none';
           resetTransforms();
         };
@@ -807,7 +701,10 @@
       posX = 0;
       posY = 0;
       currentScale = 1;
+      currentRotation = 0;
       scaleSlider.value = 1;
+      rotateSlider.value = 0;
+      rotateLabel.textContent = 'Rotate 0°';
       opacitySlider.value = 1;
       imgStage.style.opacity = 1;
       isFlippedH = false;
@@ -818,7 +715,7 @@
     function updateTransform() {
       const scaleX = isFlippedH ? -currentScale : currentScale;
       const scaleY = isFlippedV ? -currentScale : currentScale;
-      imgStage.style.transform = `translate(${posX}px, ${posY}px) scale(${scaleX}, ${scaleY})`;
+      imgStage.style.transform = `translate(${posX}px, ${posY}px) rotate(${currentRotation}deg) scale(${scaleX}, ${scaleY})`;
     }
 
     window.addEventListener('pointerdown', (e) => {
@@ -853,6 +750,12 @@
 
     scaleSlider.addEventListener('input', (e) => {
       currentScale = parseFloat(e.target.value);
+      updateTransform();
+    });
+
+    rotateSlider.addEventListener('input', (e) => {
+      currentRotation = parseInt(e.target.value, 10);
+      rotateLabel.textContent = `Rotate ${currentRotation}°`;
       updateTransform();
     });
 
