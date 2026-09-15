@@ -33,7 +33,7 @@
       --glass-panel: rgba(10, 23, 17, 0.94);
       --guide-stroke: #d4af37;
       --canvas-light-bg: #ffffff;
-      --scrim-bg: #ffffff;
+      --scrim-fill: #ffffff;
       --select-arrow: url('data:image/svg+xml;utf8,<svg fill="%23d4af37" height="12" viewBox="0 0 24 24" width="12" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
       --btn-primary-text: #0d1a12;
     }
@@ -54,7 +54,7 @@
       --glass-panel: rgba(10, 19, 36, 0.94);
       --guide-stroke: #d9834e;
       --canvas-light-bg: #ffffff;
-      --scrim-bg: #ffffff;
+      --scrim-fill: #ffffff;
       --select-arrow: url('data:image/svg+xml;utf8,<svg fill="%23d9834e" height="12" viewBox="0 0 24 24" width="12" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
       --btn-primary-text: #07101f;
     }
@@ -75,7 +75,7 @@
       --glass-panel: rgba(16, 18, 22, 0.94);
       --guide-stroke: #cbd5e1;
       --canvas-light-bg: #ffffff;
-      --scrim-bg: #ffffff;
+      --scrim-fill: #ffffff;
       --select-arrow: url('data:image/svg+xml;utf8,<svg fill="%23cbd5e1" height="12" viewBox="0 0 24 24" width="12" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
       --btn-primary-text: #0b0f14;
     }
@@ -96,7 +96,7 @@
       --glass-panel: rgba(26, 10, 23, 0.94);
       --guide-stroke: #eaa0a9;
       --canvas-light-bg: #ffffff;
-      --scrim-bg: #ffffff;
+      --scrim-fill: #ffffff;
       --select-arrow: url('data:image/svg+xml;utf8,<svg fill="%23eaa0a9" height="12" viewBox="0 0 24 24" width="12" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
       --btn-primary-text: #1d071a;
     }
@@ -202,69 +202,7 @@
       background: #000000;
     }
 
-    /* GLOBAL DIM SCRIM */
-    #ambient-scrim {
-      position: absolute;
-      inset: 0;
-      background: var(--scrim-bg);
-      opacity: 0.78;
-      pointer-events: none;
-      z-index: 10;
-      transition: background 0.3s ease;
-    }
-
-    #stage-container.dark-mode #ambient-scrim {
-      background: #000000;
-    }
-
-    /* UNIFIED SPOTLIGHT + GUIDE APPARATUS */
-    #nail-guide-wrapper {
-      position: absolute;
-      pointer-events: none;
-      z-index: 15;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
-
-    /* THE CLIPPED SPOTLIGHT (100% Contrast Punch-Through) */
-    #spotlight-punch {
-      position: absolute;
-      width: 100vw;
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      pointer-events: none;
-    }
-
-    #spotlight-img {
-      position: absolute;
-      transform-origin: center center;
-      max-width: 320px;
-      display: none;
-    }
-
-    /* THE DASHED GUIDE OUTLINE */
-    #nail-svg {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.35));
-    }
-
-    #nail-path {
-      stroke: var(--guide-stroke);
-      stroke-width: 2.2;
-      stroke-dasharray: 4 3;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      transition: stroke 0.3s ease;
-    }
-
-    /* BASE BACKGROUND ARTWORK STAGE */
+    /* ARTWORK LAYER */
     #image-stage {
       position: absolute;
       touch-action: none;
@@ -277,6 +215,37 @@
       display: none;
       max-width: 320px;
       pointer-events: none;
+    }
+
+    /* INTEGRATED SPOTLIGHT + OUTLINE RIG */
+    #spotlight-rig {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 15;
+    }
+
+    #scrim-surface {
+      fill: var(--scrim-fill);
+      opacity: 0.78;
+      transition: fill 0.3s ease;
+    }
+
+    #stage-container.dark-mode #scrim-surface {
+      fill: #000000;
+    }
+
+    #guide-outline-path {
+      stroke: var(--guide-stroke);
+      stroke-width: 2.2;
+      stroke-dasharray: 4 3;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+      transition: stroke 0.3s ease;
+      filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.35));
     }
 
     #touch-guard {
@@ -476,15 +445,6 @@
 </head>
 <body>
 
-  <!-- SVG CLIPPATH REGISTRATION -->
-  <svg width="0" height="0" style="position:absolute;">
-    <defs>
-      <clipPath id="nail-clip" clipPathUnits="objectBoundingBox">
-        <path id="clip-path-data" d="" />
-      </clipPath>
-    </defs>
-  </svg>
-
   <header id="main-header">
     <div class="brand-title">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -521,23 +481,26 @@
       </button>
     </div>
 
-    <!-- BACKGROUND ARTWORK (Ghosted by ambient scrim) -->
+    <!-- ARTWORK REFERENCE -->
     <div id="image-stage">
-      <img id="trace-img" src="" alt="Custom trace reference" crossorigin="anonymous" />
+      <img id="trace-img" src="" alt="Trace reference" crossorigin="anonymous" />
     </div>
 
-    <!-- AMBIENT DIM SCRIM -->
-    <div id="ambient-scrim"></div>
+    <!-- SYNCHRONIZED SPOTLIGHT & OUTLINE RIG -->
+    <svg id="spotlight-rig" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <mask id="scrim-mask">
+          <rect width="100%" height="100%" fill="white" />
+          <path id="mask-cutout" d="" fill="black" />
+        </mask>
+      </defs>
 
-    <!-- UNIFIED SPOTLIGHT & GUIDE (Guaranteed zero drift) -->
-    <div id="nail-guide-wrapper" style="width: 140px; height: 260px; clip-path: url(#nail-clip); -webkit-clip-path: url(#nail-clip);">
-      <div id="spotlight-punch">
-        <img id="spotlight-img" src="" alt="Spotlight trace reference" crossorigin="anonymous" />
-      </div>
-      <svg id="nail-svg" viewBox="0 0 100 190" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path id="nail-path" d="" />
-      </svg>
-    </div>
+      <!-- The Dimmed Background Scrim -->
+      <rect id="scrim-surface" width="100%" height="100%" mask="url(#scrim-mask)" />
+
+      <!-- The Gold Dashed Outline (Always 100% matched to cutout) -->
+      <path id="guide-outline-path" d="" />
+    </svg>
   </main>
 
   <footer id="control-deck">
@@ -609,8 +572,7 @@
   </footer>
 
   <script>
-    // Normalized 0-1 unit paths for seamless CSS responsive clipPath
-    const NAIL_PATHS_RAW = {
+    const NAIL_PATHS_BASE = {
       almond: "M 20,165 C 20,185 80,185 80,165 C 80,115 72,55 50,10 C 28,55 20,115 20,165 Z",
       coffin: "M 20,165 C 20,185 80,185 80,165 C 80,110 74,45 64,12 L 36,12 C 26,45 20,110 20,165 Z",
       stiletto: "M 20,165 C 20,185 80,185 80,165 C 80,105 68,45 50,4 C 32,45 20,105 20,165 Z",
@@ -618,14 +580,6 @@
       squoval: "M 20,165 C 20,185 80,185 80,165 L 80,24 C 80,12 68,12 50,12 C 32,12 20,12 20,24 Z",
       oval: "M 20,165 C 20,185 80,185 80,165 C 80,95 80,12 50,12 C 20,12 20,95 20,165 Z"
     };
-
-    function convertToUnitPath(d) {
-      return d.replace(/([0-9.]+),([0-9.]+)/g, (match, x, y) => {
-        const nx = (parseFloat(x) / 100).toFixed(4);
-        const ny = (parseFloat(y) / 190).toFixed(4);
-        return `${nx},${ny}`;
-      });
-    }
 
     const THEMES = [
       { id: 'emerald', label: '✦ Emerald' },
@@ -641,7 +595,6 @@
     const bgBtn = document.getElementById('bg-toggle');
     const bgLabel = document.getElementById('bg-label');
     const stage = document.getElementById('stage-container');
-    const ambientScrim = document.getElementById('ambient-scrim');
     const touchGuard = document.getElementById('touch-guard');
     const lockBanner = document.getElementById('lock-banner');
     const lockBtn = document.getElementById('lock-btn');
@@ -649,16 +602,15 @@
     const mainHeader = document.getElementById('main-header');
     const controlDeck = document.getElementById('control-deck');
 
-    const nailSvg = document.getElementById('nail-svg');
-    const nailPath = document.getElementById('nail-path');
-    const clipPathData = document.getElementById('clip-path-data');
-    const guideWrapper = document.getElementById('nail-guide-wrapper');
+    const spotlightRig = document.getElementById('spotlight-rig');
+    const scrimSurface = document.getElementById('scrim-surface');
+    const maskCutout = document.getElementById('mask-cutout');
+    const guideOutlinePath = document.getElementById('guide-outline-path');
     const shapeSelect = document.getElementById('shape-select');
 
     const fileInput = document.getElementById('file-input');
     const imgStage = document.getElementById('image-stage');
     const traceImg = document.getElementById('trace-img');
-    const spotlightImg = document.getElementById('spotlight-img');
     const presetSelect = document.getElementById('preset-select');
 
     const flipHBtn = document.getElementById('flip-h');
@@ -684,9 +636,40 @@
     let currentRotation = 0;
     let isLocked = false;
 
-    // Initialize Almond Shape Synchronously
-    nailPath.setAttribute('d', NAIL_PATHS_RAW.almond);
-    clipPathData.setAttribute('d', convertToUnitPath(NAIL_PATHS_RAW.almond));
+    let guideW = 140;
+    let guideH = 260;
+    let currentShape = 'almond';
+
+    // Synchronize both spotlight hole and gold outline together
+    function updateRigGeometry() {
+      if (currentShape === 'none') {
+        spotlightRig.style.display = 'none';
+        return;
+      }
+      spotlightRig.style.display = 'block';
+
+      const rect = stage.getBoundingClientRect();
+      const originX = rect.width / 2;
+      const originY = rect.height / 2;
+
+      // Base viewBox reference is 100 x 190
+      const sx = guideW / 100;
+      const sy = guideH / 190;
+      const tx = originX - (guideW / 2);
+      const ty = originY - (guideH / 2);
+
+      const rawPath = NAIL_PATHS_BASE[currentShape];
+      const transformAttr = `translate(${tx}, ${ty}) scale(${sx}, ${sy})`;
+
+      maskCutout.setAttribute('d', rawPath);
+      maskCutout.setAttribute('transform', transformAttr);
+
+      guideOutlinePath.setAttribute('d', rawPath);
+      guideOutlinePath.setAttribute('transform', transformAttr);
+    }
+
+    window.addEventListener('resize', updateRigGeometry);
+    setTimeout(updateRigGeometry, 40);
 
     tabArt.addEventListener('click', () => {
       tabArt.classList.add('active');
@@ -716,37 +699,27 @@
     });
 
     shapeSelect.addEventListener('change', (e) => {
-      const shape = e.target.value;
-      if (shape === 'none') {
-        guideWrapper.style.display = 'none';
-        ambientScrim.style.display = 'none';
-      } else {
-        guideWrapper.style.display = 'flex';
-        ambientScrim.style.display = 'block';
-        nailPath.setAttribute('d', NAIL_PATHS_RAW[shape]);
-        clipPathData.setAttribute('d', convertToUnitPath(NAIL_PATHS_RAW[shape]));
-      }
+      currentShape = e.target.value;
+      updateRigGeometry();
     });
 
     lengthSlider.addEventListener('input', (e) => {
-      guideWrapper.style.height = `${e.target.value}px`;
+      guideH = parseInt(e.target.value, 10);
+      updateRigGeometry();
     });
 
     widthSlider.addEventListener('input', (e) => {
-      guideWrapper.style.width = `${e.target.value}px`;
+      guideW = parseInt(e.target.value, 10);
+      updateRigGeometry();
     });
 
     presetSelect.addEventListener('change', (e) => {
       const val = e.target.value;
       if (val === 'none') {
         traceImg.style.display = 'none';
-        spotlightImg.style.display = 'none';
       } else {
-        const url = './' + val;
-        traceImg.src = url;
-        spotlightImg.src = url;
+        traceImg.src = './' + val;
         traceImg.style.display = 'block';
-        spotlightImg.style.display = 'block';
         resetTransforms();
       }
     });
@@ -756,11 +729,8 @@
       if (file) {
         const reader = new FileReader();
         reader.onload = (event) => {
-          const res = event.target.result;
-          traceImg.src = res;
-          spotlightImg.src = res;
+          traceImg.src = event.target.result;
           traceImg.style.display = 'block';
-          spotlightImg.style.display = 'block';
           presetSelect.value = 'none';
           resetTransforms();
         };
@@ -784,9 +754,7 @@
     function updateTransform() {
       const scaleX = isFlippedH ? -currentScale : currentScale;
       const scaleY = isFlippedV ? -currentScale : currentScale;
-      const transformString = `translate(${posX}px, ${posY}px) rotate(${currentRotation}deg) scale(${scaleX}, ${scaleY})`;
-      imgStage.style.transform = transformString;
-      spotlightImg.style.transform = transformString;
+      imgStage.style.transform = `translate(${posX}px, ${posY}px) rotate(${currentRotation}deg) scale(${scaleX}, ${scaleY})`;
     }
 
     window.addEventListener('pointerdown', (e) => {
@@ -827,7 +795,7 @@
     });
 
     dimSlider.addEventListener('input', (e) => {
-      ambientScrim.style.opacity = e.target.value;
+      scrimSurface.style.opacity = e.target.value;
     });
 
     lockBtn.addEventListener('click', () => {
