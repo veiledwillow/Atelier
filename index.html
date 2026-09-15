@@ -33,6 +33,7 @@
       --glass-panel: rgba(10, 23, 17, 0.94);
       --guide-stroke: #d4af37;
       --canvas-light-bg: #ffffff;
+      --scrim-color: #ffffff;
       --select-arrow: url('data:image/svg+xml;utf8,<svg fill="%23d4af37" height="12" viewBox="0 0 24 24" width="12" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
       --btn-primary-text: #0d1a12;
     }
@@ -53,6 +54,7 @@
       --glass-panel: rgba(10, 19, 36, 0.94);
       --guide-stroke: #d9834e;
       --canvas-light-bg: #ffffff;
+      --scrim-color: #ffffff;
       --select-arrow: url('data:image/svg+xml;utf8,<svg fill="%23d9834e" height="12" viewBox="0 0 24 24" width="12" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
       --btn-primary-text: #07101f;
     }
@@ -73,6 +75,7 @@
       --glass-panel: rgba(16, 18, 22, 0.94);
       --guide-stroke: #cbd5e1;
       --canvas-light-bg: #ffffff;
+      --scrim-color: #ffffff;
       --select-arrow: url('data:image/svg+xml;utf8,<svg fill="%23cbd5e1" height="12" viewBox="0 0 24 24" width="12" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
       --btn-primary-text: #0b0f14;
     }
@@ -93,6 +96,7 @@
       --glass-panel: rgba(26, 10, 23, 0.94);
       --guide-stroke: #eaa0a9;
       --canvas-light-bg: #ffffff;
+      --scrim-color: #ffffff;
       --select-arrow: url('data:image/svg+xml;utf8,<svg fill="%23eaa0a9" height="12" viewBox="0 0 24 24" width="12" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
       --btn-primary-text: #1d071a;
     }
@@ -198,6 +202,26 @@
       background: #000000;
     }
 
+    /* FULLSCREEN SPOTLIGHT SCRIM LAYER */
+    #focus-overlay {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 12;
+    }
+
+    #scrim-rect {
+      fill: var(--scrim-color);
+      opacity: 0.78;
+      transition: fill 0.3s ease;
+    }
+
+    #stage-container.dark-mode #scrim-rect {
+      fill: #000000;
+    }
+
     #nail-guide-wrapper {
       position: absolute;
       pointer-events: none;
@@ -284,7 +308,7 @@
 
     .button-grid {
       display: grid;
-      grid-template-columns: 1.1fr 1.2fr 1.5fr 1fr 1fr;
+      grid-template-columns: 1fr 1.15fr 1.65fr 0.95fr 0.95fr;
       gap: 6px;
     }
 
@@ -373,7 +397,7 @@
       text-transform: uppercase;
       letter-spacing: 0.7px;
       color: var(--text-muted);
-      min-width: 54px;
+      min-width: 62px;
     }
 
     input[type="range"] {
@@ -418,7 +442,6 @@
       border: 2px solid var(--bg-deep);
     }
 
-    /* Landscape Mode Optimizations */
     @media (orientation: landscape) and (max-height: 500px) {
       header { height: 40px; padding: 0 10px; }
       .brand-title { font-size: 11px; }
@@ -451,7 +474,6 @@
         <span id="bg-label">☼ Light</span>
       </button>
 
-      <!-- Lock Relocated to Header: Permanent & Accessible -->
       <button class="icon-btn lock-accent" id="lock-btn">
         🔒 Lock
       </button>
@@ -471,12 +493,29 @@
       </button>
     </div>
 
+    <!-- SPOTLIGHT MASK OVERLAY -->
+    <svg id="focus-overlay" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <mask id="spotlight-mask">
+          <rect width="100%" height="100%" fill="white" />
+          <g id="mask-nail-group">
+            <svg id="mask-svg" viewBox="0 0 100 190">
+              <path id="mask-path" d="" fill="black" />
+            </svg>
+          </g>
+        </mask>
+      </defs>
+      <rect id="scrim-rect" width="100%" height="100%" mask="url(#spotlight-mask)" />
+    </svg>
+
+    <!-- NAIL GUIDE OUTLINE -->
     <div id="nail-guide-wrapper" style="width: 140px; height: 260px;">
       <svg id="nail-svg" viewBox="0 0 100 190" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path id="nail-path" d="" />
       </svg>
     </div>
 
+    <!-- ARTWORK STAGE -->
     <div id="image-stage">
       <img id="trace-img" src="" alt="Custom trace reference" crossorigin="anonymous" />
     </div>
@@ -505,21 +544,24 @@
       </select>
 
       <select id="preset-select" class="btn">
-        <option value="none">Presets...</option>
-        <option value="stained_glass">Stained Glass</option>
+        <option value="none">Flash Sheets...</option>
+        <option value="lines-french.png">French & Lines</option>
+        <option value="lace-mesh.png">Lace & Mesh</option>
+        <option value="gothic-romance.png">Gothic Romance</option>
+        <option value="celestial.png">Esoteric Celestial</option>
+        <option value="baroque-filigree.png">Baroque Filigree</option>
+        <option value="botanicals.png">Fine Botanicals</option>
       </select>
 
       <button class="btn" id="flip-h" title="Flip Horizontal">↔ Flip</button>
       <button class="btn" id="flip-v" title="Flip Vertical">↕ Invert</button>
     </div>
 
-    <!-- TABS -->
     <div class="slider-tabs">
       <button class="tab-btn active" id="tab-art">Artwork Sliders</button>
       <button class="tab-btn" id="tab-guide">Nail Guide Sliders</button>
     </div>
 
-    <!-- ARTWORK CONTROLS WITH ROTATE FREEDOM -->
     <div class="slider-panel" id="panel-art">
       <div class="slider-row">
         <span class="slider-label">Zoom</span>
@@ -530,12 +572,11 @@
         <input type="range" id="rotate-slider" min="-180" max="180" step="1" value="0" />
       </div>
       <div class="slider-row">
-        <span class="slider-label">Opacity</span>
-        <input type="range" id="opacity-slider" min="0.1" max="1" step="0.05" value="1" />
+        <span class="slider-label">Outside Dim</span>
+        <input type="range" id="dim-slider" min="0" max="1" step="0.05" value="0.78" />
       </div>
     </div>
 
-    <!-- GUIDE SIZING -->
     <div class="slider-panel" id="panel-guide" style="display: none;">
       <div class="slider-row">
         <span class="slider-label">Length</span>
@@ -566,12 +607,6 @@
     ];
     let currentThemeIndex = 0;
 
-    const STAINED_GLASS_SOURCES = [
-      './6f7eeb5b-a027-4abb-9325-7d676ca60f8d.png',
-      './stained-glass.png',
-      'https://i.ibb.co/3sBshfS/stained-glass-nails.png'
-    ];
-
     const root = document.documentElement;
     const themeBtn = document.getElementById('theme-toggle');
     const themeName = document.getElementById('theme-name');
@@ -585,6 +620,12 @@
     const mainHeader = document.getElementById('main-header');
     const controlDeck = document.getElementById('control-deck');
 
+    const focusOverlay = document.getElementById('focus-overlay');
+    const scrimRect = document.getElementById('scrim-rect');
+    const maskNailGroup = document.getElementById('mask-nail-group');
+    const maskSvg = document.getElementById('mask-svg');
+    const maskPath = document.getElementById('mask-path');
+
     const nailSvg = document.getElementById('nail-svg');
     const nailPath = document.getElementById('nail-path');
     const guideWrapper = document.getElementById('nail-guide-wrapper');
@@ -597,10 +638,10 @@
 
     const flipHBtn = document.getElementById('flip-h');
     const flipVBtn = document.getElementById('flip-v');
-    const opacitySlider = document.getElementById('opacity-slider');
     const scaleSlider = document.getElementById('scale-slider');
     const rotateSlider = document.getElementById('rotate-slider');
     const rotateLabel = document.getElementById('rotate-label');
+    const dimSlider = document.getElementById('dim-slider');
     const lengthSlider = document.getElementById('length-slider');
     const widthSlider = document.getElementById('width-slider');
 
@@ -618,7 +659,24 @@
     let currentRotation = 0;
     let isLocked = false;
 
+    let guideW = 140;
+    let guideH = 260;
+
     nailPath.setAttribute('d', NAIL_PATHS.almond);
+    maskPath.setAttribute('d', NAIL_PATHS.almond);
+
+    function updateMaskGeometry() {
+      const stageRect = stage.getBoundingClientRect();
+      const left = (stageRect.width - guideW) / 2;
+      const top = (stageRect.height - guideH) / 2;
+      maskSvg.setAttribute('x', left);
+      maskSvg.setAttribute('y', top);
+      maskSvg.setAttribute('width', guideW);
+      maskSvg.setAttribute('height', guideH);
+    }
+
+    window.addEventListener('resize', updateMaskGeometry);
+    setTimeout(updateMaskGeometry, 50);
 
     tabArt.addEventListener('click', () => {
       tabArt.classList.add('active');
@@ -651,33 +709,33 @@
       const shape = e.target.value;
       if (shape === 'none') {
         nailSvg.style.display = 'none';
+        focusOverlay.style.display = 'none';
       } else {
         nailSvg.style.display = 'block';
+        focusOverlay.style.display = 'block';
         nailPath.setAttribute('d', NAIL_PATHS[shape]);
+        maskPath.setAttribute('d', NAIL_PATHS[shape]);
       }
     });
 
     lengthSlider.addEventListener('input', (e) => {
-      guideWrapper.style.height = `${e.target.value}px`;
+      guideH = parseInt(e.target.value, 10);
+      guideWrapper.style.height = `${guideH}px`;
+      updateMaskGeometry();
     });
 
     widthSlider.addEventListener('input', (e) => {
-      guideWrapper.style.width = `${e.target.value}px`;
+      guideW = parseInt(e.target.value, 10);
+      guideWrapper.style.width = `${guideW}px`;
+      updateMaskGeometry();
     });
 
     presetSelect.addEventListener('change', (e) => {
       const val = e.target.value;
       if (val === 'none') {
         traceImg.style.display = 'none';
-      } else if (val === 'stained_glass') {
-        let attempt = 0;
-        traceImg.onerror = () => {
-          attempt++;
-          if (attempt < STAINED_GLASS_SOURCES.length) {
-            traceImg.src = STAINED_GLASS_SOURCES[attempt];
-          }
-        };
-        traceImg.src = STAINED_GLASS_SOURCES[0];
+      } else {
+        traceImg.src = './' + val;
         traceImg.style.display = 'block';
         resetTransforms();
       }
@@ -705,8 +763,6 @@
       scaleSlider.value = 1;
       rotateSlider.value = 0;
       rotateLabel.textContent = 'Rotate 0°';
-      opacitySlider.value = 1;
-      imgStage.style.opacity = 1;
       isFlippedH = false;
       isFlippedV = false;
       updateTransform();
@@ -744,10 +800,6 @@
       updateTransform();
     });
 
-    opacitySlider.addEventListener('input', (e) => {
-      imgStage.style.opacity = e.target.value;
-    });
-
     scaleSlider.addEventListener('input', (e) => {
       currentScale = parseFloat(e.target.value);
       updateTransform();
@@ -757,6 +809,10 @@
       currentRotation = parseInt(e.target.value, 10);
       rotateLabel.textContent = `Rotate ${currentRotation}°`;
       updateTransform();
+    });
+
+    dimSlider.addEventListener('input', (e) => {
+      scrimRect.style.opacity = e.target.value;
     });
 
     lockBtn.addEventListener('click', () => {
