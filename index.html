@@ -17,6 +17,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
   <style>
+    /* 1. EMERALD & GOLD */
     :root[data-theme="emerald"] {
       --bg-deep: #050d09;
       --bg-surface: #0a1711;
@@ -29,11 +30,14 @@
       --accent-text: #f9e7a2;
       --text-main: #f4f6f4;
       --text-muted: #8fa597;
-      --glass-panel: rgba(10, 23, 17, 0.88);
+      --glass-panel: rgba(10, 23, 17, 0.94);
       --guide-stroke: #d4af37;
       --canvas-light-bg: #ffffff;
+      --select-arrow: url('data:image/svg+xml;utf8,<svg fill="%23d4af37" height="12" viewBox="0 0 24 24" width="12" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+      --btn-primary-text: #0d1a12;
     }
 
+    /* 2. SAPPHIRE & COPPER */
     :root[data-theme="sapphire"] {
       --bg-deep: #050b16;
       --bg-surface: #0a1324;
@@ -46,9 +50,51 @@
       --accent-text: #fddbc7;
       --text-main: #f0f4fc;
       --text-muted: #8294b5;
-      --glass-panel: rgba(10, 19, 36, 0.88);
+      --glass-panel: rgba(10, 19, 36, 0.94);
       --guide-stroke: #d9834e;
       --canvas-light-bg: #ffffff;
+      --select-arrow: url('data:image/svg+xml;utf8,<svg fill="%23d9834e" height="12" viewBox="0 0 24 24" width="12" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+      --btn-primary-text: #07101f;
+    }
+
+    /* 3. OBSIDIAN & PLATINUM */
+    :root[data-theme="obsidian"] {
+      --bg-deep: #08090a;
+      --bg-surface: #101216;
+      --bg-surface-elevated: #1a1d23;
+      --border-soft: rgba(226, 232, 240, 0.22);
+      --border-bright: rgba(226, 232, 240, 0.55);
+      --accent-prime: #e2e8f0;
+      --accent-glow: rgba(226, 232, 240, 0.32);
+      --accent-gradient: linear-gradient(135deg, #ffffff 0%, #cbd5e1 50%, #94a3b8 100%);
+      --accent-text: #ffffff;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --glass-panel: rgba(16, 18, 22, 0.94);
+      --guide-stroke: #cbd5e1;
+      --canvas-light-bg: #ffffff;
+      --select-arrow: url('data:image/svg+xml;utf8,<svg fill="%23cbd5e1" height="12" viewBox="0 0 24 24" width="12" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+      --btn-primary-text: #0b0f14;
+    }
+
+    /* 4. PLUM VELVET & ROSE GOLD */
+    :root[data-theme="plum"] {
+      --bg-deep: #0f050d;
+      --bg-surface: #1a0a17;
+      --bg-surface-elevated: #260e22;
+      --border-soft: rgba(234, 160, 169, 0.25);
+      --border-bright: rgba(234, 160, 169, 0.6);
+      --accent-prime: #eaa0a9;
+      --accent-glow: rgba(234, 160, 169, 0.35);
+      --accent-gradient: linear-gradient(135deg, #fad0d6 0%, #eaa0a9 50%, #b86273 100%);
+      --accent-text: #ffe4e8;
+      --text-main: #fcf4f6;
+      --text-muted: #b58d99;
+      --glass-panel: rgba(26, 10, 23, 0.94);
+      --guide-stroke: #eaa0a9;
+      --canvas-light-bg: #ffffff;
+      --select-arrow: url('data:image/svg+xml;utf8,<svg fill="%23eaa0a9" height="12" viewBox="0 0 24 24" width="12" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+      --btn-primary-text: #1d071a;
     }
 
     * {
@@ -73,8 +119,8 @@
     }
 
     header {
-      height: 52px;
-      padding: 0 16px;
+      height: 50px;
+      padding: 0 14px;
       background: var(--glass-panel);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
@@ -87,7 +133,7 @@
 
     .brand-title {
       font-family: 'Cinzel', serif;
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 700;
       letter-spacing: 2px;
       text-transform: uppercase;
@@ -109,8 +155,8 @@
       background: rgba(255, 255, 255, 0.04);
       border: 1px solid var(--border-soft);
       color: var(--text-muted);
-      height: 32px;
-      padding: 0 10px;
+      height: 30px;
+      padding: 0 9px;
       border-radius: 6px;
       font-size: 11px;
       font-weight: 600;
@@ -125,7 +171,7 @@
     .icon-btn:hover, .icon-btn.active {
       color: var(--accent-text);
       border-color: var(--accent-prime);
-      background: rgba(212, 175, 55, 0.1);
+      background: rgba(255, 255, 255, 0.08);
     }
 
     #stage-container {
@@ -150,13 +196,12 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: width 0.08s ease, height 0.08s ease;
     }
 
     #nail-svg {
       width: 100%;
       height: 100%;
-      filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.35));
+      filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.35));
     }
 
     #nail-path {
@@ -174,10 +219,6 @@
       cursor: grab;
       transform-origin: center center;
       z-index: 5;
-    }
-
-    #image-stage:active {
-      cursor: grabbing;
     }
 
     #trace-img {
@@ -199,7 +240,6 @@
       inset: 0;
       background: transparent;
       z-index: 50;
-      cursor: default;
     }
 
     #lock-banner {
@@ -232,7 +272,7 @@
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       border-top: 1px solid var(--border-soft);
-      padding: 12px 14px calc(12px + env(safe-area-inset-bottom));
+      padding: 10px 14px calc(14px + env(safe-area-inset-bottom));
       display: flex;
       flex-direction: column;
       gap: 10px;
@@ -250,7 +290,7 @@
       background: var(--bg-surface-elevated);
       color: var(--text-main);
       border: 1px solid var(--border-soft);
-      height: 38px;
+      height: 36px;
       border-radius: 7px;
       font-size: 11px;
       font-weight: 600;
@@ -259,9 +299,9 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      transition: all 0.15s ease;
       white-space: nowrap;
       padding: 0 4px;
+      transition: all 0.2s ease;
     }
 
     .btn:active {
@@ -271,63 +311,117 @@
 
     .btn.primary {
       background: var(--accent-gradient);
-      color: #0d1a12;
+      color: var(--btn-primary-text);
       border: none;
       font-weight: 700;
       box-shadow: 0 2px 10px var(--accent-glow);
-    }
-
-    :root[data-theme="sapphire"] .btn.primary {
-      color: #07101f;
     }
 
     select.btn {
       appearance: none;
       -webkit-appearance: none;
       padding: 0 16px 0 8px;
-      background-image: url('data:image/svg+xml;utf8,<svg fill="%23d4af37" height="12" viewBox="0 0 24 24" width="12" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+      background-image: var(--select-arrow);
       background-repeat: no-repeat;
       background-position: right 4px center;
       text-align-last: center;
     }
 
-    :root[data-theme="sapphire"] select.btn {
-      background-image: url('data:image/svg+xml;utf8,<svg fill="%23d9834e" height="12" viewBox="0 0 24 24" width="12" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
-    }
-
-    .slider-matrix {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px 12px;
-      background: rgba(0, 0, 0, 0.25);
-      padding: 8px 10px;
+    .slider-tabs {
+      display: flex;
+      gap: 8px;
+      padding: 2px;
+      background: rgba(0, 0, 0, 0.35);
       border-radius: 8px;
       border: 1px solid var(--border-soft);
     }
 
-    .slider-cell {
+    .tab-btn {
+      flex: 1;
+      height: 28px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .tab-btn.active {
+      background: var(--bg-surface-elevated);
+      color: var(--accent-text);
+      border: 1px solid var(--accent-prime);
+    }
+
+    .slider-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 10px 12px;
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 8px;
+      border: 1px solid var(--border-soft);
+    }
+
+    .slider-row {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 12px;
     }
 
     .slider-label {
-      font-size: 10px;
-      font-weight: 600;
+      font-size: 11px;
+      font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.8px;
       color: var(--text-muted);
-      min-width: 44px;
+      min-width: 60px;
     }
 
     input[type="range"] {
       flex: 1;
-      height: 4px;
-      border-radius: 2px;
-      background: rgba(255, 255, 255, 0.1);
-      accent-color: var(--accent-prime);
+      height: 32px;
+      background: transparent;
       outline: none;
       cursor: pointer;
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    input[type="range"]::-webkit-slider-runnable-track {
+      height: 6px;
+      border-radius: 3px;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      height: 24px;
+      width: 24px;
+      border-radius: 50%;
+      background: var(--accent-gradient);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+      margin-top: -9px;
+      border: 2px solid var(--bg-deep);
+    }
+
+    input[type="range"]::-moz-range-track {
+      height: 6px;
+      border-radius: 3px;
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      height: 24px;
+      width: 24px;
+      border-radius: 50%;
+      background: var(--accent-gradient);
+      border: 2px solid var(--bg-deep);
     }
   </style>
 </head>
@@ -342,7 +436,8 @@
     </div>
 
     <div class="header-actions">
-      <button class="icon-btn" id="theme-toggle" title="Toggle Palette">
+      <!-- 4-Theme Carousel Button -->
+      <button class="icon-btn" id="theme-toggle" title="Cycle Palette">
         <span id="theme-name">✦ Emerald & Gold</span>
       </button>
 
@@ -372,10 +467,8 @@
     </div>
 
     <div id="image-stage">
-      <img id="trace-img" src="" alt="Custom trace reference" />
-
-      <svg id="vector-preset" viewBox="0 0 100 180" fill="none" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-      </svg>
+      <img id="trace-img" src="" alt="Custom trace reference" crossorigin="anonymous" />
+      <svg id="vector-preset" viewBox="0 0 100 180" fill="none" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></svg>
     </div>
   </main>
 
@@ -403,7 +496,7 @@
 
       <select id="preset-select" class="btn" style="grid-column: span 1;">
         <option value="none">Presets...</option>
-        <option value="stained_glass">Stained Glass</option>
+        <option value="stained_glass">Stained Glass Sheet</option>
         <option value="celestial">Celestial</option>
         <option value="botanical">Botanical</option>
         <option value="gothic">Gothic Heart</option>
@@ -416,23 +509,29 @@
       <button class="btn primary" id="lock-btn">🔒 Lock</button>
     </div>
 
-    <div class="slider-matrix">
-      <div class="slider-cell">
+    <!-- CLEAN TWO-TAB SYSTEM FOR SLIDERS -->
+    <div class="slider-tabs">
+      <button class="tab-btn active" id="tab-art">Artwork Sliders</button>
+      <button class="tab-btn" id="tab-guide">Nail Guide Sliders</button>
+    </div>
+
+    <div class="slider-panel" id="panel-art">
+      <div class="slider-row">
+        <span class="slider-label">Zoom</span>
+        <input type="range" id="scale-slider" min="0.1" max="6" step="0.05" value="1" />
+      </div>
+      <div class="slider-row">
         <span class="slider-label">Opacity</span>
         <input type="range" id="opacity-slider" min="0.1" max="1" step="0.05" value="0.85" />
       </div>
+    </div>
 
-      <div class="slider-cell">
-        <span class="slider-label">Zoom</span>
-        <input type="range" id="scale-slider" min="0.1" max="5" step="0.05" value="1" />
-      </div>
-
-      <div class="slider-cell">
+    <div class="slider-panel" id="panel-guide" style="display: none;">
+      <div class="slider-row">
         <span class="slider-label">Length</span>
         <input type="range" id="length-slider" min="70" max="480" step="5" value="260" />
       </div>
-
-      <div class="slider-cell">
+      <div class="slider-row">
         <span class="slider-label">Width</span>
         <input type="range" id="width-slider" min="35" max="280" step="2" value="140" />
       </div>
@@ -473,6 +572,15 @@
       `
     };
 
+    // 4 DISTINCT COLORWAYS
+    const THEMES = [
+      { id: 'emerald', label: '✦ Emerald & Gold' },
+      { id: 'sapphire', label: '✦ Sapphire & Copper' },
+      { id: 'obsidian', label: '✦ Obsidian & Platinum' },
+      { id: 'plum', label: '✦ Plum & Rose Gold' }
+    ];
+    let currentThemeIndex = 0;
+
     const root = document.documentElement;
     const themeBtn = document.getElementById('theme-toggle');
     const themeName = document.getElementById('theme-name');
@@ -504,6 +612,11 @@
     const lengthSlider = document.getElementById('length-slider');
     const widthSlider = document.getElementById('width-slider');
 
+    const tabArt = document.getElementById('tab-art');
+    const tabGuide = document.getElementById('tab-guide');
+    const panelArt = document.getElementById('panel-art');
+    const panelGuide = document.getElementById('panel-guide');
+
     let posX = 0, posY = 0;
     let startX = 0, startY = 0;
     let isDragging = false;
@@ -514,15 +627,27 @@
 
     nailPath.setAttribute('d', NAIL_PATHS.almond);
 
+    // Tab switching for comfortable spacing
+    tabArt.addEventListener('click', () => {
+      tabArt.classList.add('active');
+      tabGuide.classList.remove('active');
+      panelArt.style.display = 'flex';
+      panelGuide.style.display = 'none';
+    });
+
+    tabGuide.addEventListener('click', () => {
+      tabGuide.classList.add('active');
+      tabArt.classList.remove('active');
+      panelGuide.style.display = 'flex';
+      panelArt.style.display = 'none';
+    });
+
+    // 4-Colorway Carousel Handler
     themeBtn.addEventListener('click', () => {
-      const currentTheme = root.getAttribute('data-theme');
-      if (currentTheme === 'emerald') {
-        root.setAttribute('data-theme', 'sapphire');
-        themeName.textContent = '✦ Sapphire & Copper';
-      } else {
-        root.setAttribute('data-theme', 'emerald');
-        themeName.textContent = '✦ Emerald & Gold';
-      }
+      currentThemeIndex = (currentThemeIndex + 1) % THEMES.length;
+      const theme = THEMES[currentThemeIndex];
+      root.setAttribute('data-theme', theme.id);
+      themeName.textContent = theme.label;
     });
 
     bgBtn.addEventListener('click', () => {
@@ -550,13 +675,15 @@
       guideWrapper.style.width = `${e.target.value}px`;
     });
 
+    // Stained glass image loader
     presetSelect.addEventListener('change', (e) => {
       const val = e.target.value;
       if (val === 'none') {
         presetSvg.style.display = 'none';
+        traceImg.style.display = 'none';
       } else if (val === 'stained_glass') {
         presetSvg.style.display = 'none';
-        traceImg.src = 'stained-glass.png';
+        traceImg.src = '6f7eeb5b-a027-4abb-9325-7d676ca60f8d.png';
         traceImg.style.display = 'block';
         resetTransforms();
       } else {
